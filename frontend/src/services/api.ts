@@ -88,6 +88,16 @@ export const applicationAPI = {
       headers: { 'Content-Type': 'multipart/form-data' },
     }),
 
+  extractDocument: (formData: FormData) =>
+    api.post<ApiResponse<any>>(`/applications/extract-document`, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    }),
+
+  getEstimate: (certificateType: string, priority: string) =>
+    api.get<ApiResponse<{ estimatedDays: string, historicalCount: number, formula: string }>>('/applications/estimate', {
+      params: { certificateType, priority }
+    }),
+
   validateApplication: (id: string, data: { certificateType: string; applicantDetails: any; uploadedDocuments?: any[] }) =>
     api.post<ApiResponse<import('../types').ValidationResult>>(`/applications/validate`, data),
 };
@@ -135,6 +145,7 @@ export const adminAPI = {
       recentActivity?: any[];
       certTypeDistribution?: any[];
       avgProcessingDays?: number;
+      insights?: import('../types').DashboardInsights;
     }>>('/admin/stats'),
 
   getAllUsers: (params?: { role?: string; isActive?: string | boolean; search?: string; page?: number; limit?: number }) =>
@@ -176,6 +187,17 @@ export const notificationAPI = {
 
   markAllAsRead: () =>
     api.put<ApiResponse<{ message: string }>>('/notifications/mark-all-read'),
+};
+
+// ─── Assistant API ────────────────────────────────────────────────────────────
+export const assistantAPI = {
+  getGuidance: (query: string) =>
+    api.post<ApiResponse<{ 
+      certificateType: string | null;
+      requiredDocuments: string[];
+      estimatedDays: string;
+      message: string;
+    }>>('/assistant/guide', { query }),
 };
 
 export default api;

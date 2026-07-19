@@ -21,6 +21,7 @@ const MyApplications: React.FC = () => {
   const [total, setTotal] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
+  const [fetchError, setFetchError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
 
   const status = (searchParams.get('status') || 'all') as ApplicationStatus | 'all';
@@ -29,6 +30,7 @@ const MyApplications: React.FC = () => {
 
   const fetchApplications = useCallback(async () => {
     setIsLoading(true);
+    setFetchError(null);
     try {
       const params: Record<string, string | number> = { limit: 10, page };
       if (status !== 'all') params.status = status;
@@ -46,6 +48,9 @@ const MyApplications: React.FC = () => {
         setTotal(res.data.data?.total ?? 0);
         setTotalPages((res.data.data as any)?.totalPages ?? 1);
       }
+    } catch (error) {
+      console.error('Failed to load applications', error);
+      setFetchError('Failed to load applications. Please check your connection and try again.');
     } finally {
       setIsLoading(false);
     }
@@ -151,6 +156,15 @@ const MyApplications: React.FC = () => {
         {isLoading ? (
           <div className="flex justify-center py-20">
             <Loader size="md" text="Loading applications..." />
+          </div>
+        ) : fetchError ? (
+          <div className="glass-card-dark p-16 text-center">
+            <div className="text-5xl mb-4">⚠️</div>
+            <h3 className="text-xl font-semibold text-white mb-2">Could Not Load Applications</h3>
+            <p className="text-slate-400 mb-6">{fetchError}</p>
+            <button onClick={fetchApplications} className="btn-primary">
+              Try Again
+            </button>
           </div>
         ) : applications.length === 0 ? (
           <div className="glass-card-dark p-16 text-center">

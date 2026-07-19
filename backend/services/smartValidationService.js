@@ -3,6 +3,8 @@
  * Rule-based validation providing scores, missing fields, and suggestions.
  */
 
+const Application = require('../models/Application');
+
 // Required documents per certificate type mapping
 const REQUIRED_DOCUMENTS = {
   birth: ['citizenship_parent', 'hospital_record', 'ward_recommendation'],
@@ -107,6 +109,13 @@ const validateApplicationData = (certificateType, applicantDetails, uploadedDocu
     smartSuggestions.push(`Please upload: ${missingDocuments.map(d => d.replace('_', ' ')).join(', ')}.`);
   }
 
+  // 5. OCR Data Cross-Check
+  if (applicantDetails.ocrCitizenshipNumber && applicantDetails.citizenshipNumber) {
+    if (applicantDetails.ocrCitizenshipNumber !== applicantDetails.citizenshipNumber) {
+      warnings.push("Document details don't match entered details — please review.");
+    }
+  }
+
   // Final check - if there are any errors, it's not valid
   if (errors.length > 0) {
     isValid = false;
@@ -126,6 +135,62 @@ const validateApplicationData = (certificateType, applicantDetails, uploadedDocu
   };
 };
 
+// ─── 2. Anomaly Detection ──────────────────────────────────────────────────────────
+const detectAnomalies = async (userId, applicantDetails, certificateType) => {
+  let isFlagged = false;
+  let flagReasons = [];
+
+  try {
+    // Rule 1: Duplicate citizenship number used by a DIFFERENT user in an approved app (Identity Fraud Risk)
+    if (applicantDetails.citizenshipNumber) {
+      const existingApp = await Application.findOne({
+        'applicantDetails.citizenshipNumber': applicantDetails.citizenshipNumber,
+        status: 'approved',
+        userId: { $ne: userId }
+      });
+      if (existingApp) {
+        isFlagged = true;
+        flagReasons.push('Duplicate citizenship number found on an approved application by another user.');
+      }
+    }
+
+    // Rule 2: Same user > 3 apps for SAME certificateType within 30 days (Spam/Abuse Risk)
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    const recentAppsCount = await Application.countDocuments({
+      userId,
+      certificateType,
+      createdAt: { $gte: thirtyDaysAgo }
+    });
+    if (recentAppsCount >= 3) {
+      isFlagged = true;
+      flagReasons.push(`High submission frequency: User has submitted ${recentAppsCount} ${certificateType} applications in the last 30 days.`);
+    }
+
+    // Rule 3: Age constraints
+    if (applicantDetails.dateOfBirth) {
+      const dob = new Date(applicantDetails.dateOfBirth);
+      const ageDiffMs = Date.now() - dob.getTime();
+      const ageDate = new Date(ageDiffMs); 
+      const age = Math.abs(ageDate.getUTCFullYear() - 1970);
+
+      if (certificateType === 'citizenship' && age < 16) {
+        isFlagged = true;
+        flagReasons.push(`Applicant age is ${age}, but citizenship typically requires 16+ years.`);
+      } else if (certificateType === 'marriage' && age < 20) {
+        isFlagged = true;
+        flagReasons.push(`Applicant age is ${age}, but marriage certificate typically requires 20+ years.`);
+      }
+    }
+  } catch (error) {
+    console.error('Error during anomaly detection:', error);
+    // Do not block application submission if anomaly detection fails
+  }
+
+  return { flaggedForReview: isFlagged, flagReasons };
+};
+
 module.exports = {
-  validateApplicationData
+  validateApplicationData,
+  detectAnomalies
 };

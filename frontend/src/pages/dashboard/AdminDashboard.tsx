@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { adminAPI } from '../../services/api';
-import type { DashboardStats, RecentActivity } from '../../types';
+import type { DashboardStats, RecentActivity, DashboardInsights } from '../../types';
 import Loader from '../../components/common/Loader';
 import { useAuth } from '../../hooks/useAuth';
 
@@ -12,6 +12,7 @@ const AdminDashboard: React.FC = () => {
   const [certDistribution, setCertDistribution] = useState<any[]>([]);
   const [avgProcessingDays, setAvgProcessingDays] = useState(0);
   const [totalUsers, setTotalUsers] = useState(0);
+  const [insights, setInsights] = useState<DashboardInsights | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   // SMART FEATURE: Priority Queue (Top urgent/old pending)
@@ -23,12 +24,13 @@ const AdminDashboard: React.FC = () => {
       try {
         const res = await adminAPI.getStats();
         if (res.data.success && res.data.data) {
-          const { stats: fetchedStats, recentActivity, certTypeDistribution, avgProcessingDays, totalUsers } = res.data.data;
+          const { stats: fetchedStats, recentActivity, certTypeDistribution, avgProcessingDays, totalUsers, insights } = res.data.data;
           setStats(fetchedStats);
           setRecentActivity(recentActivity || []);
           setCertDistribution(certTypeDistribution || []);
           setAvgProcessingDays(avgProcessingDays || 0);
           setTotalUsers(totalUsers || 0);
+          setInsights(insights || null);
         }
       } catch (error) {
         console.error('Failed to fetch admin stats:', error);
@@ -84,8 +86,8 @@ const AdminDashboard: React.FC = () => {
           </div>
         </div>
 
-        {/* 1. Stats Overview Row */}
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+        {/* 1. Stats Overview Row - 6 cards: 2 col on mobile, 3 on md, 6 on lg */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
           <div className="glass-card-dark p-5 border-blue-500/20 hover:border-blue-500/40 transition-colors">
             <div className="flex items-center justify-between mb-2">
               <span className="text-slate-400 text-sm font-medium">Total Apps</span>
@@ -125,6 +127,13 @@ const AdminDashboard: React.FC = () => {
             </div>
             <div className="text-3xl font-bold text-white">{totalUsers}</div>
           </div>
+
+          <Link to="/admin/applications?status=pending" className="glass-card-dark p-5 border-red-500/30 bg-red-500/5 hover:bg-red-500/10 transition-colors block">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-red-400 text-sm font-medium flex items-center gap-1">⚠ Flagged</span>
+            </div>
+            <div className="text-3xl font-bold text-white">{stats?.flaggedCount || 0}</div>
+          </Link>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -211,6 +220,32 @@ const AdminDashboard: React.FC = () => {
                 </div>
               )}
             </div>
+
+            {/* Smart Insights Panel */}
+            {insights && (
+              <div className="glass-card-dark p-6 border-indigo-500/20">
+                <h2 className="text-lg font-bold text-indigo-400 mb-6 flex items-center gap-2">
+                  <span>🧠</span> Smart Insights
+                </h2>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="bg-slate-900/50 p-4 rounded-xl border border-slate-700/50">
+                    <p className="text-slate-500 text-xs uppercase font-bold mb-1">Most Requested</p>
+                    <p className="text-white font-medium capitalize text-lg">{certDistribution[0]?._id || 'N/A'}</p>
+                  </div>
+                  <div className="bg-slate-900/50 p-4 rounded-xl border border-slate-700/50">
+                    <p className="text-slate-500 text-xs uppercase font-bold mb-1">Busiest Area</p>
+                    <p className="text-white font-medium capitalize text-lg">{insights.busiestMunicipality}</p>
+                  </div>
+                  <div className="bg-slate-900/50 p-4 rounded-xl border border-slate-700/50">
+                    <p className="text-slate-500 text-xs uppercase font-bold mb-1">Approval Rate</p>
+                    <div className="flex items-end gap-2">
+                      <p className="text-emerald-400 font-bold text-xl">{insights.approvalRate}%</p>
+                      <p className="text-red-400 text-xs mb-1">({insights.rejectionRate}% rejected)</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
 
           </div>
 

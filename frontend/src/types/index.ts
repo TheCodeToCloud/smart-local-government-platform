@@ -91,6 +91,8 @@ export interface Application {
   reviewedAt?: string;
   estimatedCompletionDate?: string;
   smartFormData?: Record<string, unknown>;
+  flaggedForReview?: boolean;
+  flagReasons?: string[];
   createdAt: string;
   updatedAt: string;
 }
@@ -134,6 +136,13 @@ export interface DashboardStats {
   thisWeek?: number;
   draft?: number;
   approvedToday?: number;
+  flaggedCount?: number;
+}
+
+export interface DashboardInsights {
+  busiestMunicipality: string;
+  approvalRate: string;
+  rejectionRate: string;
 }
 
 export interface RecentActivity {

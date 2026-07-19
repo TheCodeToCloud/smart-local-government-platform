@@ -10,6 +10,10 @@ const {
   getAllUsers,
   toggleUserStatus,
 } = require('../controllers/adminController');
+const {
+  rejectApplicationValidation,
+  approveApplicationValidation,
+} = require('../middleware/validationMiddleware');
 
 router.use(protect);
 router.use(adminOnly);
@@ -17,8 +21,8 @@ router.use(adminOnly);
 router.get('/stats', getDashboardStats);
 
 router.get('/applications', getAllApplications);
-router.put('/applications/:id/approve', approveApplication);
-router.put('/applications/:id/reject', rejectApplication);
+router.put('/applications/:id/approve', approveApplicationValidation, approveApplication);
+router.put('/applications/:id/reject', rejectApplicationValidation, rejectApplication);
 router.put('/applications/:id/review', setUnderReview);
 
 router.get('/users', getAllUsers);

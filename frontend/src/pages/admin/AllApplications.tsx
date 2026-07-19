@@ -337,7 +337,14 @@ const AllApplications: React.FC = () => {
                           </td>
                           <td className="table-cell">
                             <div>
-                              <p className="text-white font-medium">{userObj?.fullName || '—'}</p>
+                              <p className="text-white font-medium flex items-center gap-2">
+                                {userObj?.fullName || '—'}
+                                {app.flaggedForReview && (
+                                  <span className="text-red-400 text-[10px] font-bold bg-red-500/10 px-1.5 py-0.5 rounded border border-red-500/30" title={app.flagReasons?.join('\n')}>
+                                    ⚠ Flagged
+                                  </span>
+                                )}
+                              </p>
                               <p className="text-slate-500 text-xs">{userObj?.email || ''}</p>
                             </div>
                           </td>
@@ -380,7 +387,14 @@ const AllApplications: React.FC = () => {
                     <div key={app._id} className="p-4 space-y-3">
                       <div className="flex justify-between items-start">
                         <div>
-                          <span className="font-mono text-primary-400 font-medium text-sm block mb-1">{app.applicationNumber}</span>
+                          <span className="font-mono text-primary-400 font-medium text-sm block mb-1">
+                            {app.applicationNumber}
+                            {app.flaggedForReview && (
+                              <span className="ml-2 text-red-400 text-[10px] font-bold bg-red-500/10 px-1.5 py-0.5 rounded border border-red-500/30">
+                                ⚠ Flagged
+                              </span>
+                            )}
+                          </span>
                           <StatusBadge status={app.status} size="sm" />
                         </div>
                         {app.priority === 'urgent' && (

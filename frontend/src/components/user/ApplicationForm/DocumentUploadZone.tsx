@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import type { CertificateType } from '../../../types';
 import { CERTIFICATE_TYPES } from './CertificateTypeSelector';
+import { applicationAPI } from '../../../services/api';
 
 export interface UploadedFile {
   documentType: string;
@@ -15,22 +16,28 @@ interface DocumentUploadZoneProps {
   files: UploadedFile[];
   onAdd: (file: UploadedFile) => void;
   onRemove: (index: number) => void;
+  onAutoFill?: (data: Record<string, string>) => void;
 }
 
 const ALLOWED_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'application/pdf'];
 const MAX_SIZE = 5 * 1024 * 1024; // 5MB
 
 const DocumentUploadZone: React.FC<DocumentUploadZoneProps> = ({
-  certType, files, onAdd, onRemove,
+  certType, files, onAdd, onRemove, onAutoFill
 }) => {
   const [dragging, setDragging] = useState(false);
   const [selectedDocType, setSelectedDocType] = useState('');
+  
+  // OCR State
+  const [ocrLoading, setOcrLoading] = useState(false);
+  const [ocrData, setOcrData] = useState<any>(null);
+  const [ocrError, setOcrError] = useState('');
 
   const certInfo = CERTIFICATE_TYPES.find((c) => c.id === certType);
   const requiredDocs = certInfo?.docs || [];
 
   const handleFile = useCallback(
-    (file: File) => {
+    async (file: File) => {
       if (!selectedDocType) {
         alert('Please select a document type first.');
         return;
@@ -53,6 +60,32 @@ const DocumentUploadZone: React.FC<DocumentUploadZoneProps> = ({
         preview,
         progress: 0,
       });
+
+      // Trigger OCR if it's a citizenship document
+      if (selectedDocType.toLowerCase().includes('citizenship')) {
+        setOcrLoading(true);
+        setOcrData(null);
+        setOcrError('');
+        
+        try {
+          const fd = new FormData();
+          fd.append('document', file);
+          const res = await applicationAPI.extractDocument(fd);
+          
+          if (res.data.success && res.data.data) {
+            const { extractedFields } = res.data.data;
+            if (extractedFields.fullName || extractedFields.citizenshipNumber || extractedFields.dateOfBirth) {
+              setOcrData(extractedFields);
+            } else {
+              setOcrError('Could not clearly read the document details. Ensure image is not blurry.');
+            }
+          }
+        } catch (error) {
+          setOcrError('Failed to process document. Please fill details manually.');
+        } finally {
+          setOcrLoading(false);
+        }
+      }
 
       setSelectedDocType('');
     },
@@ -163,6 +196,71 @@ const DocumentUploadZone: React.FC<DocumentUploadZoneProps> = ({
         className="hidden"
         disabled={!selectedDocType}
       />
+
+      {/* OCR Banner */}
+      {ocrLoading && (
+        <div className="mt-4 p-4 rounded-xl bg-blue-500/10 border border-blue-500/30 flex items-center gap-3 animate-pulse">
+          <span className="text-xl animate-spin">⚙️</span>
+          <p className="text-blue-400 text-sm">Smart scanning document...</p>
+        </div>
+      )}
+
+      {ocrError && (
+        <div className="mt-4 p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-between">
+          <p className="text-amber-400 text-sm flex items-center gap-2"><span>⚠️</span> {ocrError}</p>
+          <button onClick={() => setOcrError('')} className="text-amber-400 hover:text-amber-300 text-sm p-1">✕</button>
+        </div>
+      )}
+
+      {ocrData && (
+        <div className="mt-4 p-4 rounded-xl bg-indigo-500/10 border border-indigo-500/30 shadow-lg border-l-4 border-l-indigo-500 animate-slide-up">
+          <div className="flex justify-between items-start mb-2">
+            <h4 className="text-indigo-400 font-bold text-sm flex items-center gap-2">
+              <span>✨</span> Smart Detection
+            </h4>
+            <button onClick={() => setOcrData(null)} className="text-slate-400 hover:text-white text-xs">Dismiss</button>
+          </div>
+          <p className="text-slate-300 text-sm mb-3">We detected the following details. Use this to auto-fill?</p>
+          <div className="grid grid-cols-2 gap-2 mb-4 text-xs">
+            <div className="bg-slate-900/50 p-2 rounded border border-slate-700/50">
+              <span className="text-slate-500 block mb-0.5">Name</span>
+              <span className="text-white">{ocrData.fullName || '—'}</span>
+            </div>
+            <div className="bg-slate-900/50 p-2 rounded border border-slate-700/50">
+              <span className="text-slate-500 block mb-0.5">Citizenship No</span>
+              <span className="text-white">{ocrData.citizenshipNumber || '—'}</span>
+            </div>
+            {ocrData.dateOfBirth && (
+              <div className="bg-slate-900/50 p-2 rounded border border-slate-700/50 col-span-2">
+                <span className="text-slate-500 block mb-0.5">DOB</span>
+                <span className="text-white">{ocrData.dateOfBirth}</span>
+              </div>
+            )}
+          </div>
+          <div className="flex gap-2">
+            <button 
+              onClick={() => {
+                if (onAutoFill) {
+                  onAutoFill({
+                    ...ocrData,
+                    ocrCitizenshipNumber: ocrData.citizenshipNumber
+                  });
+                }
+                setOcrData(null);
+              }}
+              className="flex-1 bg-indigo-600 hover:bg-indigo-500 text-white py-1.5 rounded text-sm transition-colors"
+            >
+              Accept & Auto-fill
+            </button>
+            <button 
+              onClick={() => setOcrData(null)}
+              className="flex-1 bg-slate-800 hover:bg-slate-700 text-slate-300 py-1.5 rounded text-sm transition-colors"
+            >
+              Reject
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Uploaded Files */}
       {files.length > 0 && (

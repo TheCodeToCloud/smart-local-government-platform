@@ -112,6 +112,14 @@ const applicationSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.Mixed, // AI-extracted data
       default: null,
     },
+    flaggedForReview: {
+      type: Boolean,
+      default: false,
+    },
+    flagReasons: {
+      type: [String],
+      default: [],
+    },
   },
   {
     timestamps: true,

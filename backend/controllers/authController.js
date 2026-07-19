@@ -36,10 +36,10 @@ const register = async (req, res, next) => {
       });
     }
 
-    if (password.length < 6) {
+    if (password.length < 6 || !/[A-Za-z]/.test(password) || !/[0-9]/.test(password)) {
       return res.status(400).json({
         success: false,
-        message: 'Password must be at least 6 characters.',
+        message: 'Password must be at least 6 characters and contain at least one letter and one number.',
       });
     }
 
@@ -97,16 +97,32 @@ const login = async (req, res, next) => {
       });
     }
 
+    // Check if account is locked
+    if (user.lockUntil && user.lockUntil > Date.now()) {
+      return res.status(403).json({
+        success: false,
+        message: 'Account is temporarily locked due to too many failed login attempts. Please try again later.',
+      });
+    }
+
     // Compare password
     const isMatch = await user.comparePassword(password);
     if (!isMatch) {
+      user.failedLoginAttempts = (user.failedLoginAttempts || 0) + 1;
+      if (user.failedLoginAttempts >= 5) {
+        user.lockUntil = Date.now() + 15 * 60 * 1000; // Lock for 15 minutes
+      }
+      await user.save({ validateBeforeSave: false });
+
       return res.status(401).json({
         success: false,
         message: 'Invalid email or password.',
       });
     }
 
-    // Update last login
+    // Reset failed login attempts and update last login
+    user.failedLoginAttempts = 0;
+    user.lockUntil = undefined;
     user.lastLogin = new Date();
     await user.save({ validateBeforeSave: false });
 

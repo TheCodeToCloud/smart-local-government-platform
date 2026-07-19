@@ -137,7 +137,7 @@ const approveApplication = async (req, res, next) => {
     const { certificate, pdfUrl } = await generateCertificate(application);
 
     // Smart Feature: Notifications & WebSockets
-    const { io } = require('../server');
+    const io = require('../socket').getIO();
     
     await Notification.create({
       userId: application.userId,
@@ -193,7 +193,7 @@ const rejectApplication = async (req, res, next) => {
     await application.save();
 
     // Smart Feature: Notifications & WebSockets
-    const { io } = require('../server');
+    const io = require('../socket').getIO();
     
     await Notification.create({
       userId: application.userId,
@@ -281,6 +281,8 @@ const getDashboardStats = async (req, res, next) => {
       recentApprovals,
       recentRejections,
       approvedToday,
+      flaggedCount,
+      municipalityAgg,
     ] = await Promise.all([
       Application.countDocuments(),
       Application.countDocuments({ status: 'pending' }),
@@ -310,6 +312,13 @@ const getDashboardStats = async (req, res, next) => {
         .populate('reviewedBy', 'fullName')
         .select('applicationNumber certificateType reviewedAt reviewedBy userId rejectionReason'),
       Application.countDocuments({ status: 'approved', reviewedAt: { $gte: startOfToday } }),
+      Application.countDocuments({ status: { $in: ['pending', 'under_review'] }, flaggedForReview: true }),
+      Application.aggregate([
+        { $match: { 'applicantDetails.municipalityName': { $exists: true, $ne: null, $ne: '' } } },
+        { $group: { _id: '$applicantDetails.municipalityName', count: { $sum: 1 } } },
+        { $sort: { count: -1 } },
+        { $limit: 1 }
+      ]),
     ]);
 
     // Build recent activity (merge approvals + rejections, sort by time)
@@ -352,6 +361,13 @@ const getDashboardStats = async (req, res, next) => {
     ]);
     const avgProcessingDays = Math.round(processingTimePipeline[0]?.avgDays || 0);
 
+    // ── Insights ──
+    const busiestMunicipality = municipalityAgg[0]?._id || 'N/A';
+    
+    const totalProcessed = approved + rejected;
+    const approvalRate = totalProcessed > 0 ? ((approved / totalProcessed) * 100).toFixed(1) : 0;
+    const rejectionRate = totalProcessed > 0 ? ((rejected / totalProcessed) * 100).toFixed(1) : 0;
+
     res.status(200).json({
       success: true,
       data: {
@@ -365,6 +381,7 @@ const getDashboardStats = async (req, res, next) => {
           thisWeek,
           thisMonth,
           approvedToday,
+          flaggedCount,
         },
         totalUsers,
         totalCerts,
@@ -373,6 +390,11 @@ const getDashboardStats = async (req, res, next) => {
         mostRequested,
         recentActivity,
         avgProcessingDays,
+        insights: {
+          busiestMunicipality,
+          approvalRate,
+          rejectionRate,
+        }
       },
     });
   } catch (error) {

@@ -9,6 +9,7 @@ import PersonalInfoForm from '../../components/user/ApplicationForm/PersonalInfo
 import DocumentUploadZone, { type UploadedFile } from '../../components/user/ApplicationForm/DocumentUploadZone';
 import ApplicationReview from '../../components/user/ApplicationForm/ApplicationReview';
 import SpouseInfoForm from '../../components/user/ApplicationForm/SpouseInfoForm';
+import { ProcessingTimeEstimate } from '../../components/smart/ProcessingTimeEstimate';
 import { AxiosError } from 'axios';
 
 // ─── State Types ─────────────────────────────────────────────────────────────
@@ -281,6 +282,16 @@ const ApplyCertificate: React.FC = () => {
             />
           )}
 
+          {(step === 1 || step === 2) && formState.certType && (
+            <div className="mt-6 mb-6">
+              <ProcessingTimeEstimate 
+                certificateType={formState.certType}
+                priority={formState.priority}
+                onUpgradeToUrgent={() => dispatch({ type: 'SET_PRIORITY', payload: 'urgent' })}
+              />
+            </div>
+          )}
+
           {step === 2 && formState.certType && (
             <PersonalInfoForm
               certType={formState.certType}
@@ -304,6 +315,7 @@ const ApplyCertificate: React.FC = () => {
               files={formState.files}
               onAdd={(f) => dispatch({ type: 'ADD_FILE', payload: f })}
               onRemove={(i) => dispatch({ type: 'REMOVE_FILE', payload: i })}
+              onAutoFill={(data) => dispatch({ type: 'AUTO_FILL', payload: data })}
             />
           )}
 

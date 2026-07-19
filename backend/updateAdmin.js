@@ -6,9 +6,14 @@ require('dotenv').config();
 const mongoose = require('mongoose');
 const User = require('./models/User');
 
-const ADMIN_EMAIL = 'amishaakumari45@gmail.com';
-const ADMIN_PASSWORD = 'Admin@123';
-const ADMIN_NAME = 'Amisha Kumari';
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
+const ADMIN_NAME = process.env.ADMIN_NAME;
+
+if (!ADMIN_EMAIL || !ADMIN_PASSWORD || !ADMIN_NAME) {
+  console.error('❌  Error: ADMIN_EMAIL, ADMIN_PASSWORD, and ADMIN_NAME must be set in .env');
+  process.exit(1);
+}
 
 const run = async () => {
   try {
@@ -50,7 +55,6 @@ const run = async () => {
     console.log(`👤  Name     : ${admin.fullName}`);
     console.log(`📧  Email    : ${admin.email}`);
     console.log(`🔑  Role     : ${admin.role}`);
-    console.log(`🔒  Password : ${ADMIN_PASSWORD}`);
     console.log('='.repeat(50));
     console.log('Login at: http://localhost:5173/login');
 

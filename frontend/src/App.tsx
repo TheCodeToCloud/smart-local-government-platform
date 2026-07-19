@@ -1,9 +1,20 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { ToastProvider } from './components/ui/Toast';
 import Navbar from './components/common/Navbar';
 import PrivateRoute from './components/common/PrivateRoute';
 import AdminRoute from './components/common/AdminRoute';
+import AssistantWidget from './components/smart/AssistantWidget';
+import ErrorBoundary from './components/common/ErrorBoundary';
+
+// ── Global Widgets ────────────────────────────────────────────────────────────
+const GlobalWidgets = () => {
+  const location = useLocation();
+  const isAdminRoute = location.pathname.startsWith('/admin');
+  
+  if (isAdminRoute) return null;
+  return <AssistantWidget />;
+};
 
 // ── Public Pages ──────────────────────────────────────────────────────────────
 import Home from './pages/Home';
@@ -30,9 +41,10 @@ function App() {
     <BrowserRouter>
       <AuthProvider>
         <ToastProvider>
-          <div className="min-h-screen bg-slate-950 flex flex-col">
-            <Navbar />
-            <main className="flex-1">
+          <ErrorBoundary>
+            <div className="min-h-screen bg-slate-950 flex flex-col">
+              <Navbar />
+              <main className="flex-1">
               <Routes>
                 {/* ── Public ──────────────────────────────────────────────────── */}
                 <Route path="/"                       element={<Home />} />
@@ -75,8 +87,10 @@ function App() {
                   }
                 />
               </Routes>
-            </main>
-          </div>
+              </main>
+              <GlobalWidgets />
+            </div>
+          </ErrorBoundary>
         </ToastProvider>
       </AuthProvider>
     </BrowserRouter>

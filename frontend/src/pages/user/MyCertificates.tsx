@@ -61,10 +61,12 @@ const CertCard: React.FC<CertCardProps> = ({ cert, onQR }) => {
   );
 
   const [isDownloading, setIsDownloading] = useState(false);
+  const [downloadError, setDownloadError] = useState<string | null>(null);
 
   const handleDownload = async () => {
     try {
       setIsDownloading(true);
+      setDownloadError(null);
       const res = await certificateAPI.download(cert._id);
       const url = window.URL.createObjectURL(new Blob([res.data as any]));
       const link = document.createElement('a');
@@ -76,7 +78,7 @@ const CertCard: React.FC<CertCardProps> = ({ cert, onQR }) => {
       window.URL.revokeObjectURL(url);
     } catch (error) {
       console.error('Download failed', error);
-      alert('Failed to download PDF. Please try again later.');
+      setDownloadError('Download failed. Please try again.');
     } finally {
       setIsDownloading(false);
     }
@@ -126,6 +128,10 @@ const CertCard: React.FC<CertCardProps> = ({ cert, onQR }) => {
         </div>
       </div>
 
+      {/* Download Error */}
+      {downloadError && (
+        <p className="text-red-400 text-xs mt-2 text-center">{downloadError}</p>
+      )}
       {/* Actions */}
       <div className="flex gap-2">
         <button
@@ -151,6 +157,7 @@ const CertCard: React.FC<CertCardProps> = ({ cert, onQR }) => {
 const MyCertificates: React.FC = () => {
   const [certificates, setCertificates] = useState<Certificate[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [fetchError, setFetchError] = useState<string | null>(null);
   const [qrCert, setQrCert] = useState<string | null>(null);
   const [filter, setFilter] = useState<'all' | 'valid' | 'expired'>('all');
 
@@ -159,6 +166,9 @@ const MyCertificates: React.FC = () => {
       try {
         const res = await certificateAPI.getAll();
         if (res.data.success) setCertificates(res.data.data?.certificates || []);
+      } catch (error) {
+        console.error('Failed to load certificates', error);
+        setFetchError('Failed to load certificates. Please check your connection and try again.');
       } finally {
         setIsLoading(false);
       }
@@ -225,6 +235,18 @@ const MyCertificates: React.FC = () => {
         {isLoading ? (
           <div className="flex justify-center py-20">
             <Loader size="md" text="Loading certificates..." />
+          </div>
+        ) : fetchError ? (
+          <div className="glass-card-dark p-16 text-center">
+            <div className="text-5xl mb-4">⚠️</div>
+            <h3 className="text-xl font-semibold text-white mb-2">Could Not Load Certificates</h3>
+            <p className="text-slate-400 mb-6">{fetchError}</p>
+            <button
+              onClick={() => { setFetchError(null); setIsLoading(true); }}
+              className="btn-primary"
+            >
+              Try Again
+            </button>
           </div>
         ) : filteredCerts.length === 0 ? (
           <div className="glass-card-dark p-16 text-center">

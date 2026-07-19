@@ -1,7 +1,10 @@
 const Application = require('../models/Application');
 const Certificate = require('../models/Certificate');
 const User = require('../models/User');
-const { validateApplicationData } = require('../services/smartValidationService');
+const Notification = require('../models/Notification');
+const { validateApplicationData, detectAnomalies } = require('../services/smartValidationService');
+const { extractDocumentData } = require('../services/ocrService');
+const { getEstimatedProcessingTime } = require('../services/predictionService');
 
 // ─── Helper: build applicationNumber ─────────────────────────────────────────
 const generateAppNumber = async () => {
@@ -26,6 +29,9 @@ const createApplication = async (req, res, next) => {
     const estimated = new Date();
     estimated.setDate(estimated.getDate() + 7);
 
+    // ── Smart Feature: Anomaly Detection ──
+    const { flaggedForReview, flagReasons } = await detectAnomalies(req.user._id, applicantDetails || {}, certificateType);
+
     const application = await Application.create({
       applicationNumber,
       userId: req.user._id,
@@ -36,6 +42,8 @@ const createApplication = async (req, res, next) => {
       spouseDetails: spouseDetails || undefined,
       smartFormData: smartFormData || null,
       estimatedCompletionDate: estimated,
+      flaggedForReview,
+      flagReasons,
     });
 
     res.status(201).json({
@@ -211,12 +219,10 @@ const uploadDocument = async (req, res, next) => {
       return res.status(400).json({ success: false, message: 'documentType is required.' });
     }
 
-    const fileUrl = `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`;
-
     application.uploadedDocuments.push({
       documentType,
-      cloudinaryUrl: fileUrl,
-      publicId: req.file.filename,
+      cloudinaryUrl: req.file.cloudinaryUrl,
+      publicId: req.file.publicId,
       fileName: req.file.originalname,
       fileSize: req.file.size,
       uploadedAt: new Date(),
@@ -254,184 +260,31 @@ const validateApplication = async (req, res, next) => {
   }
 };
 
-// ─── 8. GET /api/admin/applications ──────────────────────────────────────────
-const getAllApplicationsAdmin = async (req, res, next) => {
+// ─── 8. POST /api/applications/extract-document ──────────────────────────────
+const extractDocument = async (req, res, next) => {
   try {
-    const { status, certificateType, priority, page = 1, limit = 20 } = req.query;
-
-    const filter = {};
-    if (status && status !== 'all') filter.status = status;
-    if (certificateType && certificateType !== 'all') filter.certificateType = certificateType;
-    if (priority) filter.priority = priority;
-
-    const pageNum = Math.max(1, parseInt(page));
-    const limitNum = Math.min(100, Math.max(1, parseInt(limit)));
-    const skip = (pageNum - 1) * limitNum;
-
-    const [applications, total] = await Promise.all([
-      Application.find(filter)
-        .sort({ priority: -1, createdAt: -1 })
-        .skip(skip)
-        .limit(limitNum)
-        .populate('userId', 'fullName email phone')
-        .populate('reviewedBy', 'fullName email'),
-      Application.countDocuments(filter),
-    ]);
-
+    if (!req.file) {
+      return res.status(400).json({ success: false, message: 'No file uploaded.' });
+    }
+    const ocrResult = await extractDocumentData(req.file.buffer);
     res.status(200).json({
       success: true,
-      data: {
-        applications,
-        pagination: { total, page: pageNum, limit: limitNum, pages: Math.ceil(total / limitNum) },
-      },
+      data: ocrResult
     });
   } catch (error) {
     next(error);
   }
 };
 
-// ─── 9. PUT /api/admin/applications/:id/approve ───────────────────────────────
-const approveApplication = async (req, res, next) => {
+// ─── 9. GET /api/applications/estimate ───────────────────────────────────────
+const getEstimate = async (req, res, next) => {
   try {
-    const { adminRemarks } = req.body;
-    const application = await Application.findById(req.params.id);
-
-    if (!application) {
-      return res.status(404).json({ success: false, message: 'Application not found.' });
+    const { certificateType, priority = 'normal' } = req.query;
+    if (!certificateType) {
+      return res.status(400).json({ success: false, message: 'certificateType is required.' });
     }
-    if (!['pending', 'under_review'].includes(application.status)) {
-      return res.status(400).json({ success: false, message: 'Application cannot be approved in its current state.' });
-    }
-
-    application.status = 'approved';
-    application.reviewedBy = req.user._id;
-    application.reviewedAt = new Date();
-    if (adminRemarks) application.adminRemarks = adminRemarks;
-    await application.save();
-
-    // Issue certificate
-    const certificate = await Certificate.create({
-      applicationId: application._id,
-      userId: application.userId,
-      certificateType: application.certificateType,
-    });
-
-    res.status(200).json({
-      success: true,
-      message: 'Application approved and certificate issued.',
-      data: { application, certificate },
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-
-// ─── 10. PUT /api/admin/applications/:id/reject ────────────────────────────────
-const rejectApplication = async (req, res, next) => {
-  try {
-    const { rejectionReason, adminRemarks } = req.body;
-    if (!rejectionReason) {
-      return res.status(400).json({ success: false, message: 'Rejection reason is required.' });
-    }
-
-    const application = await Application.findById(req.params.id);
-    if (!application) {
-      return res.status(404).json({ success: false, message: 'Application not found.' });
-    }
-
-    application.status = 'rejected';
-    application.rejectionReason = rejectionReason;
-    application.reviewedBy = req.user._id;
-    application.reviewedAt = new Date();
-    if (adminRemarks) application.adminRemarks = adminRemarks;
-    await application.save();
-
-    res.status(200).json({ success: true, message: 'Application rejected.', data: { application } });
-  } catch (error) {
-    next(error);
-  }
-};
-
-// ─── 11. GET /api/admin/stats ─────────────────────────────────────────────────
-const getDashboardStats = async (req, res, next) => {
-  try {
-    const startOfMonth = new Date();
-    startOfMonth.setDate(1);
-    startOfMonth.setHours(0, 0, 0, 0);
-
-    const [total, pending, under_review, approved, rejected, thisMonth, totalUsers, totalCerts] =
-      await Promise.all([
-        Application.countDocuments(),
-        Application.countDocuments({ status: 'pending' }),
-        Application.countDocuments({ status: 'under_review' }),
-        Application.countDocuments({ status: 'approved' }),
-        Application.countDocuments({ status: 'rejected' }),
-        Application.countDocuments({ createdAt: { $gte: startOfMonth } }),
-        User.countDocuments({ role: 'user' }),
-        Certificate.countDocuments({ isValid: true }),
-      ]);
-
-    res.status(200).json({
-      success: true,
-      data: { stats: { total, pending, under_review, approved, rejected, thisMonth }, totalUsers, totalCerts },
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-
-// ─── 12. GET /api/admin/users ─────────────────────────────────────────────────
-const getAllUsers = async (req, res, next) => {
-  try {
-    const { page = 1, limit = 20, role } = req.query;
-    const filter = role ? { role } : {};
-    const skip = (parseInt(page) - 1) * parseInt(limit);
-    const [users, total] = await Promise.all([
-      User.find(filter).sort({ createdAt: -1 }).skip(skip).limit(parseInt(limit)),
-      User.countDocuments(filter),
-    ]);
-    res.status(200).json({
-      success: true,
-      data: { users, pagination: { total, page: parseInt(page), limit: parseInt(limit) } },
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-
-// ─── 13. GET /api/certificates/my ─────────────────────────────────────────────
-const getMyCertificates = async (req, res, next) => {
-  try {
-    const certificates = await Certificate.find({ userId: req.user._id })
-      .sort({ createdAt: -1 })
-      .populate('applicationId', 'applicationNumber certificateType applicantDetails');
-    res.status(200).json({ success: true, data: { certificates } });
-  } catch (error) {
-    next(error);
-  }
-};
-
-// ─── 14. GET /api/certificates/verify/:certNumber ─────────────────────────────
-const verifyCertificate = async (req, res, next) => {
-  try {
-    const { certNumber } = req.params;
-    const certificate = await Certificate.findOne({ certificateNumber: certNumber })
-      .populate('userId', 'fullName email')
-      .populate('applicationId', 'certificateType applicantDetails');
-
-    if (!certificate) {
-      return res.status(404).json({ success: false, message: 'Certificate not found.' });
-    }
-
-    const isExpired = new Date() > certificate.expiryDate;
-    res.status(200).json({
-      success: true,
-      data: {
-        certificate,
-        isExpired,
-        status: !certificate.isValid ? 'revoked' : isExpired ? 'expired' : 'valid',
-      },
-    });
+    const estimate = await getEstimatedProcessingTime(certificateType, priority);
+    res.status(200).json({ success: true, data: estimate });
   } catch (error) {
     next(error);
   }
@@ -445,11 +298,6 @@ module.exports = {
   deleteApplication,
   uploadDocument,
   validateApplication,
-  getAllApplicationsAdmin,
-  approveApplication,
-  rejectApplication,
-  getDashboardStats,
-  getAllUsers,
-  getMyCertificates,
-  verifyCertificate,
+  extractDocument,
+  getEstimate,
 };

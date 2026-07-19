@@ -1,18 +1,24 @@
 services:
+  # ── Backend: Node.js API ───────────────────────────────────────────────────
   - type: web
     name: smart-gov-backend
     env: node
     region: singapore
     plan: free
     rootDir: backend
+    # Using node native env to avoid Dockerfile complexity on free tier.
+    # Render auto-detects Node version from package.json "engines" field if set.
     buildCommand: npm install
     startCommand: node server.js
+    # Points to the /health route in server.js which returns 200 + JSON
     healthCheckPath: /health
     envVars:
       - key: NODE_ENV
         value: production
+      # Render automatically assigns PORT — 10000 is the default on Render
       - key: PORT
         value: 10000
+      # All secrets below use sync: false — set manually in Render dashboard
       - key: MONGODB_URI
         sync: false
       - key: JWT_SECRET
@@ -23,5 +29,28 @@ services:
         sync: false
       - key: CLOUDINARY_API_SECRET
         sync: false
+      # Set this to the full URL of your deployed frontend after its first deploy
+      # e.g. https://smart-gov-nepal.onrender.com
       - key: FRONTEND_URL
+        sync: false
+
+  # ── Frontend: Vite React SPA (Static Site) ─────────────────────────────────
+  - type: web
+    name: smart-gov-frontend
+    env: static
+    region: singapore
+    plan: free
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    # SPA routing: all 404s redirect to index.html so React Router handles them
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      # Must be set to the deployed backend URL BEFORE building
+      - key: VITE_API_URL
+        sync: false
+      - key: VITE_SOCKET_URL
         sync: false

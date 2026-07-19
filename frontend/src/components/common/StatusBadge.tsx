@@ -61,10 +61,12 @@ const StatusBadge: React.FC<StatusBadgeProps> = ({ status, size = 'md', classNam
 
   return (
     <span
+      role="status"
+      aria-label={`Status: ${config.label}`}
       className={`inline-flex items-center rounded-full font-semibold uppercase tracking-wide
         ${config.classes} ${sizeClasses} ${className}`}
     >
-      <span className={`w-1.5 h-1.5 rounded-full ${config.dot} flex-shrink-0`} />
+      <span className={`w-1.5 h-1.5 rounded-full ${config.dot} flex-shrink-0`} aria-hidden="true" />
       {config.label}
     </span>
   );

@@ -9,6 +9,8 @@ const ManageUsers: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
+  const [fetchError, setFetchError] = useState<string | null>(null);
+  const [toggleError, setToggleError] = useState<string | null>(null);
   
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
@@ -21,6 +23,7 @@ const ManageUsers: React.FC = () => {
 
   const fetchUsers = async () => {
     setIsLoading(true);
+    setFetchError(null);
     try {
       const params: any = { limit, page };
       if (roleFilter !== 'all') params.role = roleFilter;
@@ -34,6 +37,7 @@ const ManageUsers: React.FC = () => {
       }
     } catch (error) {
       console.error('Failed to fetch users', error);
+      setFetchError('Failed to load users. Please check your connection and try again.');
     } finally {
       setIsLoading(false);
     }
@@ -51,15 +55,16 @@ const ManageUsers: React.FC = () => {
 
   const handleToggleStatus = async (userId: string) => {
     setActionLoading(userId);
+    setToggleError(null);
     try {
       const res = await adminAPI.toggleUserStatus(userId);
       if (res.data.success) {
         // Update local state instead of re-fetching to be faster
         setUsers(users.map(u => u._id === userId ? { ...u, isActive: !u.isActive } : u));
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Failed to toggle user status', error);
-      alert('Failed to update user status. Cannot deactivate admin accounts.');
+      setToggleError(error?.response?.data?.message || 'Failed to update user status.');
     } finally {
       setActionLoading(null);
     }
@@ -84,6 +89,25 @@ const ManageUsers: React.FC = () => {
           </h1>
           <p className="text-slate-400 text-sm mt-1">View and manage all registered citizens and administrators</p>
         </div>
+
+        {/* Error Banners */}
+        {fetchError && (
+          <div className="bg-red-500/10 border border-red-500/30 rounded-xl px-5 py-4 flex items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <span className="text-red-400 text-xl">⚠️</span>
+              <p className="text-red-400 text-sm">{fetchError}</p>
+            </div>
+            <button onClick={fetchUsers} className="btn-outline py-1.5 px-4 text-xs text-red-400 border-red-500/30 hover:bg-red-500/10">
+              Retry
+            </button>
+          </div>
+        )}
+        {toggleError && (
+          <div className="bg-red-500/10 border border-red-500/30 rounded-xl px-5 py-3 flex items-center justify-between gap-4">
+            <p className="text-red-400 text-sm">⚠️ {toggleError}</p>
+            <button onClick={() => setToggleError(null)} className="text-slate-400 hover:text-white text-xs">Dismiss</button>
+          </div>
+        )}
 
         {/* Stats Row */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">

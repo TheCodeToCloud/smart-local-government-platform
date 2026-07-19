@@ -12,12 +12,26 @@ const applicationRoutes = require('./routes/applicationRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const certificateRoutes = require('./routes/certificateRoutes');
 const notificationRoutes = require('./routes/notificationRoutes');
+const assistantRoutes = require('./routes/assistantRoutes');
 
 const app = express();
 
 // ─── Security Middleware ───────────────────────────────────────────────────────
 app.use(helmet({
   crossOriginResourcePolicy: { policy: 'cross-origin' },
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+      imgSrc: ["'self'", "data:", "https://res.cloudinary.com"],
+      connectSrc: ["'self'", "http://localhost:5173", process.env.FRONTEND_URL].filter(Boolean),
+      fontSrc: ["'self'", "https:", "data:"],
+      objectSrc: ["'none'"],
+      mediaSrc: ["'self'"],
+      frameSrc: ["'none'"],
+    },
+  },
 }));
 
 // ─── CORS ─────────────────────────────────────────────────────────────────────
@@ -68,8 +82,7 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // ─── Static Files (uploaded documents) ────────────────────────────────────────
-const path = require('path');
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+// Uploads are now streamed directly to Cloudinary, no local static serving required.
 
 // ─── Logging ──────────────────────────────────────────────────────────────────
 if (process.env.NODE_ENV !== 'test') {
@@ -92,6 +105,7 @@ app.use('/api/applications', applicationRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/certificates', certificateRoutes);
 app.use('/api/notifications', notificationRoutes);
+app.use('/api/assistant', assistantRoutes);
 
 // ─── 404 Handler ──────────────────────────────────────────────────────────────
 app.use((req, res, next) => {
@@ -142,27 +156,9 @@ app.use((err, req, res, next) => {
 
 // ─── Start Server ─────────────────────────────────────────────────────────────
 // ─── Socket.IO Setup ────────────────────────────────────────────────────────
-const { Server } = require('socket.io');
 const httpServer = require('http').createServer(app);
-const io = new Server(httpServer, { 
-  cors: { 
-    origin: process.env.FRONTEND_URL || 'http://localhost:5173',
-    methods: ['GET', 'POST']
-  } 
-});
-
-io.on('connection', (socket) => {
-  console.log(`Socket connected: ${socket.id}`);
-  
-  socket.on('join_user_room', (userId) => {
-    socket.join(`user_${userId}`);
-    console.log(`Socket ${socket.id} joined room user_${userId}`);
-  });
-  
-  socket.on('disconnect', () => {
-    console.log(`Socket disconnected: ${socket.id}`);
-  });
-});
+const { initSocket } = require('./socket');
+initSocket(httpServer);
 
 const PORT = process.env.PORT || 5000;
 
