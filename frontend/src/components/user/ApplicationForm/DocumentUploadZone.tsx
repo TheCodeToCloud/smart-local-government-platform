@@ -131,11 +131,11 @@ const DocumentUploadZone: React.FC<DocumentUploadZoneProps> = ({
           {requiredDocs.map((doc) => {
             const uploaded = files.some((f) => f.documentType === doc);
             return (
-              <div key={doc} className={`flex items-center gap-2 text-sm p-2 rounded-lg
-                ${uploaded ? 'text-emerald-700 bg-emerald-50' : 'text-slate-600'}`}>
-                <span className={`w-5 h-5 rounded-full border flex items-center justify-center text-xs flex-shrink-0
-                  ${uploaded ? 'border-emerald-200 bg-emerald-100 text-emerald-700' : 'border-slate-300'}`}>
-                  {uploaded ? '✓' : '○'}
+              <div key={doc} className={`flex items-center gap-3 text-sm p-2.5 rounded-lg
+                ${uploaded ? 'text-emerald-800 bg-emerald-50 border border-emerald-100' : 'text-slate-700 bg-white border border-slate-200'}`}>
+                <span className={`w-6 h-6 rounded flex items-center justify-center text-sm flex-shrink-0
+                  ${uploaded ? 'bg-emerald-200 text-emerald-700' : 'bg-slate-100 text-slate-400'}`}>
+                  {uploaded ? '✓' : '📄'}
                 </span>
                 {doc}
               </div>
