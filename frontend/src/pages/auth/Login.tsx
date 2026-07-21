@@ -77,7 +77,7 @@ const Login: React.FC = () => {
           <div className="mb-10">
             <div className="w-20 h-20 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20
                             flex items-center justify-center p-3 mb-6 shadow-glow-blue">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/8/87/Emblem_of_Nepal.svg" alt="Nepal Emblem" className="w-full h-full object-contain drop-shadow-md" />
+              <img src="/emblem.png" alt="Nepal Emblem" className="w-full h-full object-contain drop-shadow-md" />
             </div>
             <h1 className="text-4xl font-bold mb-3 leading-tight">
               Smart Local<br />
@@ -113,7 +113,7 @@ const Login: React.FC = () => {
           <div className="text-center mb-8">
             <div className="lg:hidden w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-600 to-teal-600 flex items-center justify-center
                             p-2 mx-auto mb-4 shadow-lg border border-white/20">
-              <img src="https://upload.wikimedia.org/wikipedia/commons/8/87/Emblem_of_Nepal.svg" alt="Nepal Emblem" className="w-full h-full object-contain" />
+              <img src="/emblem.png" alt="Nepal Emblem" className="w-full h-full object-contain" />
             </div>
             <h2 className="text-3xl font-bold text-slate-800 mb-2">Welcome Back</h2>
             <p className="text-slate-500 text-sm">

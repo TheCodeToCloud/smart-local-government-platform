@@ -137,7 +137,7 @@ const Register: React.FC = () => {
         <div className="text-center mb-8">
           <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-600 to-teal-600 flex items-center justify-center
                           p-2 mx-auto mb-4 shadow-lg border border-white/20">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/8/87/Emblem_of_Nepal.svg" alt="Nepal Emblem" className="w-full h-full object-contain" />
+            <img src="/emblem.png" alt="Nepal Emblem" className="w-full h-full object-contain" />
           </div>
           <h1 className="text-3xl font-bold text-slate-800 mb-2">Create Your Account</h1>
           <p className="text-slate-500 text-sm">
