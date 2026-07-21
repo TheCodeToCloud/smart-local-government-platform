@@ -23,6 +23,33 @@ const createApplication = async (req, res, next) => {
       return res.status(400).json({ success: false, message: 'Certificate type is required.' });
     }
 
+    // ── Check for existing active application or certificate ──
+    const existingApplication = await Application.findOne({
+      userId: req.user._id,
+      certificateType,
+      status: { $in: ['pending', 'under_review', 'approved'] }
+    });
+
+    if (existingApplication) {
+      return res.status(400).json({ 
+        success: false, 
+        message: `You already have an active or approved application for a ${certificateType} certificate. Multiple certificates of the same type are not permitted.` 
+      });
+    }
+
+    const existingCertificate = await Certificate.findOne({
+      userId: req.user._id,
+      certificateType,
+      isValid: true
+    });
+
+    if (existingCertificate) {
+      return res.status(400).json({ 
+        success: false, 
+        message: `You already possess a valid ${certificateType} certificate. Multiple certificates of the same type are not permitted.` 
+      });
+    }
+
     const applicationNumber = await generateAppNumber();
 
     // Set estimated completion (7 business days)
