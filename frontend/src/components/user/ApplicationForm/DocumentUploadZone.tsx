@@ -61,31 +61,8 @@ const DocumentUploadZone: React.FC<DocumentUploadZoneProps> = ({
         progress: 0,
       });
 
-      // Trigger OCR if it's a citizenship document
-      if (selectedDocType.toLowerCase().includes('citizenship')) {
-        setOcrLoading(true);
-        setOcrData(null);
-        setOcrError('');
-        
-        try {
-          const fd = new FormData();
-          fd.append('document', file);
-          const res = await applicationAPI.extractDocument(fd);
-          
-          if (res.data.success && res.data.data) {
-            const { extractedFields } = res.data.data;
-            if (extractedFields.fullName || extractedFields.citizenshipNumber || extractedFields.dateOfBirth) {
-              setOcrData(extractedFields);
-            } else {
-              setOcrError('Could not clearly read the document details. Ensure image is not blurry.');
-            }
-          }
-        } catch (error) {
-          setOcrError('Failed to process document. Please fill details manually.');
-        } finally {
-          setOcrLoading(false);
-        }
-      }
+      // Document is uploaded — admin will verify it manually.
+      // No OCR needed here.
 
       setSelectedDocType('');
     },

@@ -116,9 +116,12 @@ const createApplicationValidation = [
 
   body('applicantDetails.dateOfBirth')
     .optional()
-    .isISO8601().withMessage('Date of birth must be a valid date (ISO 8601 format).')
     .custom((value) => {
+      if (!value) return true;
       const dob = new Date(value);
+      if (isNaN(dob.getTime())) {
+        throw new Error('Date of birth must be a valid date.');
+      }
       if (dob > new Date()) {
         throw new Error('Date of birth cannot be in the future.');
       }
