@@ -3,13 +3,13 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
 
 const certificateTypes = [
-  { id: 'birth', icon: '👶', label: 'Birth Certificate', desc: 'For newborns and registration', color: 'from-blue-500/20 to-blue-600/10', border: 'border-blue-500/30' },
-  { id: 'citizenship', icon: '🪪', label: 'Citizenship', desc: 'Nepali citizenship document', color: 'from-green-500/20 to-green-600/10', border: 'border-green-500/30' },
-  { id: 'residence', icon: '🏠', label: 'Residence', desc: 'Proof of residence certificate', color: 'from-purple-500/20 to-purple-600/10', border: 'border-purple-500/30' },
-  { id: 'marriage', icon: '💍', label: 'Marriage', desc: 'Marriage registration certificate', color: 'from-pink-500/20 to-pink-600/10', border: 'border-pink-500/30' },
-  { id: 'death', icon: '📋', label: 'Death Certificate', desc: 'Official death registration', color: 'from-slate-500/20 to-slate-600/10', border: 'border-slate-500/30' },
-  { id: 'income', icon: '💰', label: 'Income Certificate', desc: 'Proof of income document', color: 'from-amber-500/20 to-amber-600/10', border: 'border-amber-500/30' },
-  { id: 'character', icon: '⭐', label: 'Character Certificate', desc: 'Good conduct certificate', color: 'from-teal-500/20 to-teal-600/10', border: 'border-teal-500/30' },
+  { id: 'birth', icon: '👶', label: 'Birth Certificate', desc: 'For newborns and registration', color: 'from-blue-500/20 to-blue-600/10', border: 'border-blue-400/40', iconBg: 'bg-blue-50', text: 'text-blue-700' },
+  { id: 'citizenship', icon: '🪪', label: 'Citizenship', desc: 'Nepali citizenship document', color: 'from-green-500/20 to-green-600/10', border: 'border-green-400/40', iconBg: 'bg-green-50', text: 'text-green-700' },
+  { id: 'residence', icon: '🏠', label: 'Residence', desc: 'Proof of residence certificate', color: 'from-purple-500/20 to-purple-600/10', border: 'border-purple-400/40', iconBg: 'bg-purple-50', text: 'text-purple-700' },
+  { id: 'marriage', icon: '💍', label: 'Marriage', desc: 'Marriage registration certificate', color: 'from-pink-500/20 to-pink-600/10', border: 'border-pink-400/40', iconBg: 'bg-pink-50', text: 'text-pink-700' },
+  { id: 'death', icon: '📋', label: 'Death Certificate', desc: 'Official death registration', color: 'from-slate-500/20 to-slate-600/10', border: 'border-slate-400/40', iconBg: 'bg-slate-50', text: 'text-slate-700' },
+  { id: 'income', icon: '💰', label: 'Income Certificate', desc: 'Proof of income document', color: 'from-amber-500/20 to-amber-600/10', border: 'border-amber-400/40', iconBg: 'bg-amber-50', text: 'text-amber-700' },
+  { id: 'character', icon: '⭐', label: 'Character Certificate', desc: 'Good conduct certificate', color: 'from-teal-500/20 to-teal-600/10', border: 'border-teal-400/40', iconBg: 'bg-teal-50', text: 'text-teal-700' },
 ];
 
 const stats = [
@@ -23,35 +23,35 @@ const Home: React.FC = () => {
   const { isAuthenticated, user } = useAuth();
 
   return (
-    <div className="min-h-screen bg-slate-950">
+    <div className="min-h-screen bg-white">
       {/* Hero Section */}
-      <section className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-hero-gradient opacity-90" />
+      <section className="relative overflow-hidden bg-gradient-to-br from-blue-700 via-blue-600 to-teal-600">
+        {/* Subtle overlay pattern */}
         <div
           className="absolute inset-0 opacity-10"
           style={{
-            backgroundImage: `radial-gradient(circle at 25% 25%, rgba(59,130,246,0.4) 0%, transparent 50%),
-                              radial-gradient(circle at 75% 75%, rgba(5,150,105,0.4) 0%, transparent 50%)`,
+            backgroundImage: `radial-gradient(circle at 25% 25%, rgba(255,255,255,0.3) 0%, transparent 50%),
+                              radial-gradient(circle at 75% 75%, rgba(255,255,255,0.2) 0%, transparent 50%)`,
           }}
         />
         {/* Animated particles */}
-        <div className="absolute top-20 left-10 w-2 h-2 bg-blue-400 rounded-full animate-bounce-soft opacity-60" />
-        <div className="absolute top-40 right-20 w-3 h-3 bg-emerald-400 rounded-full animate-bounce-soft opacity-40"
+        <div className="absolute top-20 left-10 w-2 h-2 bg-white rounded-full animate-bounce-soft opacity-40" />
+        <div className="absolute top-40 right-20 w-3 h-3 bg-white rounded-full animate-bounce-soft opacity-30"
              style={{ animationDelay: '0.5s' }} />
-        <div className="absolute bottom-20 left-1/4 w-2 h-2 bg-purple-400 rounded-full animate-bounce-soft opacity-50"
+        <div className="absolute bottom-20 left-1/4 w-2 h-2 bg-white rounded-full animate-bounce-soft opacity-30"
              style={{ animationDelay: '1s' }} />
 
         <div className="relative z-10 max-w-7xl mx-auto px-6 py-24 text-center">
-          <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20
-                          rounded-full px-4 py-2 text-sm text-blue-200 mb-8 animate-fade-in">
-            <span className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
+          <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm border border-white/30
+                          rounded-full px-4 py-2 text-sm text-white mb-8 animate-fade-in">
+            <span className="w-2 h-2 bg-green-300 rounded-full animate-pulse" />
             Nepal Government Digital Services Platform
           </div>
 
           <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold text-white mb-6 leading-tight animate-slide-up">
             स्मार्ट सरकार
             <br />
-            <span className="text-gradient text-4xl sm:text-5xl lg:text-6xl font-bold">
+            <span className="text-yellow-300 text-4xl sm:text-5xl lg:text-6xl font-bold">
               Smart Government Services
             </span>
           </h1>
@@ -66,29 +66,29 @@ const Home: React.FC = () => {
             {isAuthenticated ? (
               user?.role === 'admin' ? (
                 <>
-                  <Link to="/admin" className="btn-primary text-base px-8 py-4">
+                  <Link to="/admin" className="bg-white text-blue-700 font-bold px-8 py-4 rounded-xl hover:bg-blue-50 transition-colors text-base shadow-lg">
                     🛡️ Admin Dashboard
                   </Link>
-                  <Link to="/admin/applications" className="btn-outline text-base px-8 py-4">
+                  <Link to="/admin/applications" className="bg-transparent border-2 border-white text-white font-bold px-8 py-4 rounded-xl hover:bg-white/10 transition-colors text-base">
                     📋 Manage Applications
                   </Link>
                 </>
               ) : (
                 <>
-                  <Link to="/apply" className="btn-primary text-base px-8 py-4">
+                  <Link to="/apply" className="bg-white text-blue-700 font-bold px-8 py-4 rounded-xl hover:bg-blue-50 transition-colors text-base shadow-lg">
                     🚀 Apply for Certificate
                   </Link>
-                  <Link to="/dashboard" className="btn-outline text-base px-8 py-4">
+                  <Link to="/dashboard" className="bg-transparent border-2 border-white text-white font-bold px-8 py-4 rounded-xl hover:bg-white/10 transition-colors text-base">
                     📊 My Dashboard
                   </Link>
                 </>
               )
             ) : (
               <>
-                <Link to="/register" className="btn-primary text-base px-8 py-4">
+                <Link to="/register" className="bg-white text-blue-700 font-bold px-8 py-4 rounded-xl hover:bg-blue-50 transition-colors text-base shadow-lg">
                   🎉 Get Started Free
                 </Link>
-                <Link to="/login" className="btn-outline text-base px-8 py-4">
+                <Link to="/login" className="bg-transparent border-2 border-white text-white font-bold px-8 py-4 rounded-xl hover:bg-white/10 transition-colors text-base">
                   🔑 Sign In
                 </Link>
               </>
@@ -104,14 +104,14 @@ const Home: React.FC = () => {
       </section>
 
       {/* Stats */}
-      <section className="py-12 bg-slate-900/50 border-y border-slate-800">
+      <section className="py-12 bg-gray-50 border-y border-gray-200">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
             {stats.map((stat) => (
               <div key={stat.label} className="text-center group">
                 <div className="text-3xl mb-2 group-hover:scale-110 transition-transform">{stat.icon}</div>
-                <div className="text-3xl font-bold text-gradient mb-1">{stat.value}</div>
-                <div className="text-slate-400 text-sm">{stat.label}</div>
+                <div className="text-3xl font-bold text-blue-700 mb-1">{stat.value}</div>
+                <div className="text-gray-500 text-sm">{stat.label}</div>
               </div>
             ))}
           </div>
@@ -121,10 +121,10 @@ const Home: React.FC = () => {
       {/* Certificate Types */}
       <section className="py-20 max-w-7xl mx-auto px-6">
         <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold text-white mb-3">
-            Available <span className="text-gradient">Certificates</span>
+          <h2 className="text-4xl font-bold text-gray-800 mb-3">
+            Available <span className="text-blue-600">Certificates</span>
           </h2>
-          <p className="text-slate-400 max-w-xl mx-auto">
+          <p className="text-gray-500 max-w-xl mx-auto">
             Apply for any government certificate online. Our AI-assisted forms make the process quick and easy.
           </p>
         </div>
@@ -134,17 +134,17 @@ const Home: React.FC = () => {
             <Link
               key={cert.id}
               to={isAuthenticated ? `/apply?type=${cert.id}` : '/register'}
-              className={`glass-card-dark p-6 border ${cert.border} hover:border-opacity-60
-                          hover:-translate-y-1 transition-all duration-300 hover:shadow-card-hover group`}
+              className={`bg-white border ${cert.border} rounded-2xl p-6 shadow-sm
+                          hover:shadow-md hover:-translate-y-1 transition-all duration-300 group`}
             >
-              <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${cert.color} border ${cert.border}
+              <div className={`w-14 h-14 rounded-xl ${cert.iconBg} border ${cert.border}
                               flex items-center justify-center text-2xl mb-4
                               group-hover:scale-110 transition-transform duration-300`}>
                 {cert.icon}
               </div>
-              <h3 className="font-semibold text-white mb-1">{cert.label}</h3>
-              <p className="text-slate-400 text-sm">{cert.desc}</p>
-              <div className="mt-4 flex items-center gap-1.5 text-primary-400 text-xs font-medium">
+              <h3 className="font-semibold text-gray-800 mb-1">{cert.label}</h3>
+              <p className="text-gray-500 text-sm">{cert.desc}</p>
+              <div className={`mt-4 flex items-center gap-1.5 ${cert.text} text-xs font-medium`}>
                 Apply Now
                 <svg className="w-3 h-3 group-hover:translate-x-1 transition-transform" fill="none"
                      viewBox="0 0 24 24" stroke="currentColor">
@@ -157,18 +157,18 @@ const Home: React.FC = () => {
       </section>
 
       {/* How It Works */}
-      <section className="py-20 bg-slate-900/30">
+      <section className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-white mb-3">
-              How It <span className="text-gradient">Works</span>
+            <h2 className="text-4xl font-bold text-gray-800 mb-3">
+              How It <span className="text-blue-600">Works</span>
             </h2>
-            <p className="text-slate-400">Three simple steps to get your certificate</p>
+            <p className="text-gray-500">Three simple steps to get your certificate</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
             {/* Connector line */}
-            <div className="hidden md:block absolute top-12 left-1/4 right-1/4 h-0.5 bg-gradient-to-r from-primary-600 to-secondary-600" />
+            <div className="hidden md:block absolute top-12 left-1/4 right-1/4 h-0.5 bg-gradient-to-r from-blue-500 to-teal-500" />
 
             {[
               { step: '01', icon: '📝', title: 'Fill Smart Form', desc: 'Our AI assists you in filling out the application form accurately and quickly.' },
@@ -176,13 +176,13 @@ const Home: React.FC = () => {
               { step: '03', icon: '🎖️', title: 'Get Certificate', desc: 'Receive your approved certificate digitally. Download anytime, anywhere.' },
             ].map((step) => (
               <div key={step.step} className="text-center relative">
-                <div className="w-24 h-24 rounded-2xl bg-gov-gradient flex flex-col items-center justify-center
-                                mx-auto mb-6 shadow-glow-blue relative z-10">
+                <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-blue-600 to-teal-600 flex flex-col items-center justify-center
+                                mx-auto mb-6 shadow-lg relative z-10">
                   <span className="text-3xl">{step.icon}</span>
                   <span className="text-xs font-bold text-blue-200 mt-1">{step.step}</span>
                 </div>
-                <h3 className="text-xl font-bold text-white mb-3">{step.title}</h3>
-                <p className="text-slate-400 leading-relaxed">{step.desc}</p>
+                <h3 className="text-xl font-bold text-gray-800 mb-3">{step.title}</h3>
+                <p className="text-gray-500 leading-relaxed">{step.desc}</p>
               </div>
             ))}
           </div>
@@ -191,20 +191,20 @@ const Home: React.FC = () => {
 
       {/* CTA */}
       {!isAuthenticated && (
-        <section className="py-20">
+        <section className="py-20 bg-white">
           <div className="max-w-4xl mx-auto px-6 text-center">
-            <div className="glass-card-dark p-12 border border-primary-800/40 bg-gov-gradient/10">
+            <div className="bg-gradient-to-br from-blue-600 to-teal-600 rounded-3xl p-12 shadow-xl">
               <h2 className="text-4xl font-bold text-white mb-4">
                 Ready to Go Digital? 🚀
               </h2>
-              <p className="text-slate-300 text-lg mb-8">
+              <p className="text-blue-100 text-lg mb-8">
                 Join thousands of citizens who are already using Smart Gov Nepal for their certificate needs.
               </p>
               <div className="flex gap-4 justify-center flex-wrap">
-                <Link to="/register" className="btn-primary text-base px-10 py-4">
+                <Link to="/register" className="bg-white text-blue-700 font-bold px-10 py-4 rounded-xl hover:bg-blue-50 transition-colors text-base shadow-lg">
                   Create Free Account
                 </Link>
-                <Link to="/login" className="btn-outline text-base px-10 py-4">
+                <Link to="/login" className="bg-transparent border-2 border-white text-white font-bold px-10 py-4 rounded-xl hover:bg-white/10 transition-colors text-base">
                   Sign In
                 </Link>
               </div>
@@ -214,19 +214,19 @@ const Home: React.FC = () => {
       )}
 
       {/* Footer */}
-      <footer className="border-t border-slate-800 py-10 bg-slate-900/50">
+      <footer className="border-t border-gray-200 py-10 bg-gray-50">
         <div className="max-w-7xl mx-auto px-6 text-center">
           <div className="flex items-center justify-center gap-2 mb-4">
             <span className="text-2xl">🇳🇵</span>
-            <span className="font-bold text-white">Smart Gov Nepal</span>
+            <span className="font-bold text-gray-700">Smart Gov Nepal</span>
           </div>
-          <p className="text-slate-500 text-sm">
+          <p className="text-gray-400 text-sm">
             © 2026 Government of Nepal — Smart Local Government Platform. All rights reserved.
           </p>
           <div className="flex gap-6 justify-center mt-4">
-            <Link to="/terms" className="text-slate-500 hover:text-slate-300 text-xs transition-colors">Terms</Link>
-            <Link to="/privacy" className="text-slate-500 hover:text-slate-300 text-xs transition-colors">Privacy</Link>
-            <Link to="/verify/CERT-DEMO-2024-000001" className="text-slate-500 hover:text-slate-300 text-xs transition-colors">Verify Certificate</Link>
+            <Link to="/terms" className="text-gray-400 hover:text-gray-600 text-xs transition-colors">Terms</Link>
+            <Link to="/privacy" className="text-gray-400 hover:text-gray-600 text-xs transition-colors">Privacy</Link>
+            <Link to="/verify/CERT-DEMO-2024-000001" className="text-gray-400 hover:text-gray-600 text-xs transition-colors">Verify Certificate</Link>
           </div>
         </div>
       </footer>
