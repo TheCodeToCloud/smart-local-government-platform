@@ -40,6 +40,7 @@ export default {
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
         nepali: ['Noto Sans Devanagari', 'sans-serif'],
+        'serif-doc': ['Times New Roman', 'Georgia', 'serif'],
       },
       animation: {
         'fade-in': 'fadeIn 0.3s ease-in-out',
