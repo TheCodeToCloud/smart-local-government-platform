@@ -4,6 +4,7 @@ import type { Certificate } from '../../types';
 import StatusBadge from '../../components/common/StatusBadge';
 import Loader from '../../components/common/Loader';
 import { CERTIFICATE_TYPES } from '../../components/user/ApplicationForm/CertificateTypeSelector';
+import BirthCertificatePrinter from '../../components/certificates/BirthCertificatePrinter';
 
 // ─── QR Modal ─────────────────────────────────────────────────────────────────
 const QRModal: React.FC<{ certNumber: string; onClose: () => void }> = ({
@@ -49,9 +50,10 @@ const QRModal: React.FC<{ certNumber: string; onClose: () => void }> = ({
 interface CertCardProps {
   cert: Certificate;
   onQR: (certNumber: string) => void;
+  onPrintPreview: (cert: Certificate) => void;
 }
 
-const CertCard: React.FC<CertCardProps> = ({ cert, onQR }) => {
+const CertCard: React.FC<CertCardProps> = ({ cert, onQR, onPrintPreview }) => {
   const ct = CERTIFICATE_TYPES.find((c) => c.id === cert.certificateType);
   const isExpired = new Date() > new Date(cert.expiryDate);
   const status = !cert.isValid ? 'revoked' : isExpired ? 'expired' : 'valid';
@@ -64,6 +66,12 @@ const CertCard: React.FC<CertCardProps> = ({ cert, onQR }) => {
   const [downloadError, setDownloadError] = useState<string | null>(null);
 
   const handleDownload = async () => {
+    // Intercept Birth Certificate for high-quality frontend PDF generation
+    if (cert.certificateType === 'birth') {
+      onPrintPreview(cert);
+      return;
+    }
+
     try {
       setIsDownloading(true);
       setDownloadError(null);
@@ -139,7 +147,7 @@ const CertCard: React.FC<CertCardProps> = ({ cert, onQR }) => {
           disabled={status !== 'valid' || isDownloading}
           className={`flex-1 btn-secondary text-xs py-2.5 text-center ${(status !== 'valid' || isDownloading) ? 'opacity-40 cursor-not-allowed' : ''}`}
         >
-          {isDownloading ? 'Downloading...' : '⬇️ Download PDF'}
+          {isDownloading ? 'Downloading...' : cert.certificateType === 'birth' ? '🖨️ Print / PDF' : '⬇️ Download PDF'}
         </button>
         <button
           onClick={() => onQR(cert.certificateNumber)}
@@ -159,6 +167,7 @@ const MyCertificates: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [fetchError, setFetchError] = useState<string | null>(null);
   const [qrCert, setQrCert] = useState<string | null>(null);
+  const [printCert, setPrintCert] = useState<Certificate | null>(null);
   const [filter, setFilter] = useState<'all' | 'valid' | 'expired'>('all');
 
   useEffect(() => {
@@ -186,6 +195,10 @@ const MyCertificates: React.FC = () => {
   return (
     <div className="min-h-screen bg-slate-50 py-8 px-4 sm:px-6">
       {qrCert && <QRModal certNumber={qrCert} onClose={() => setQrCert(null)} />}
+      
+      {printCert && printCert.certificateType === 'birth' && (
+        <BirthCertificatePrinter cert={printCert} onClose={() => setPrintCert(null)} />
+      )}
 
       <div className="max-w-5xl mx-auto">
         {/* Header */}
@@ -263,7 +276,7 @@ const MyCertificates: React.FC = () => {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {filteredCerts.map((cert) => (
-              <CertCard key={cert._id} cert={cert} onQR={setQrCert} />
+              <CertCard key={cert._id} cert={cert} onQR={setQrCert} onPrintPreview={setPrintCert} />
             ))}
           </div>
         )}
