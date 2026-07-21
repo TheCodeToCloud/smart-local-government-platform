@@ -70,7 +70,21 @@ const PersonalInfoForm: React.FC<PersonalInfoFormProps> = ({
   certType, data, onChange, onAutoFill, canAutoFill,
 }) => {
   const extraFields = EXTRA_FIELDS[certType] || [];
-  const allFields = [...COMMON_FIELDS, ...extraFields];
+  let allFields = [...COMMON_FIELDS, ...extraFields];
+
+  if (certType === 'birth') {
+    allFields = allFields.map(field => {
+      if (field.key === 'fullName') {
+        return { 
+          ...field, 
+          label: 'Name of Child', 
+          labelNepali: 'शिशुको नाम', 
+          placeholder: "Child's full name" 
+        };
+      }
+      return field;
+    }).filter(field => field.key !== 'citizenshipNumber');
+  }
 
   const renderField = (field: FieldConfig) => {
     const value = data[field.key] || '';
