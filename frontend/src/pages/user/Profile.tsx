@@ -117,12 +117,12 @@ const Profile: React.FC = () => {
     .slice(0, 2) || '?';
 
   return (
-    <div className="min-h-screen bg-slate-950 py-8 px-4 sm:px-6">
+    <div className="min-h-screen bg-slate-50 py-8 px-4 sm:px-6">
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-white">👤 Profile Settings</h1>
-          <p className="text-slate-400 text-sm mt-1">Manage your account & security</p>
+          <h1 className="text-3xl font-bold text-slate-800">👤 Profile Settings</h1>
+          <p className="text-slate-500 text-sm mt-1">Manage your account & security</p>
         </div>
 
         {/* Toast */}
@@ -138,24 +138,24 @@ const Profile: React.FC = () => {
         )}
 
         {/* Avatar + Basic Info */}
-        <div className="glass-card-dark p-6 mb-5">
+        <div className="bg-white p-6 mb-5 rounded-3xl shadow-sm border border-slate-200">
           <div className="flex items-center gap-5 mb-5">
             {/* Avatar */}
             <div className="relative flex-shrink-0">
               <div
-                className="w-24 h-24 rounded-2xl overflow-hidden border-2 border-primary-500/40
-                            shadow-glow-blue cursor-pointer group"
+                className="w-24 h-24 rounded-2xl overflow-hidden border-2 border-primary-200
+                            shadow-sm cursor-pointer group"
                 onClick={() => fileInputRef.current?.click()}
               >
                 {avatarPreview ? (
                   <img src={avatarPreview} alt={user?.fullName} className="w-full h-full object-cover" />
                 ) : (
-                  <div className="w-full h-full bg-gov-gradient flex items-center justify-center
-                                  text-2xl font-bold text-white">
+                  <div className="w-full h-full bg-gradient-to-br from-blue-100 to-teal-100 flex items-center justify-center
+                                  text-2xl font-bold text-blue-600">
                     {initials}
                   </div>
                 )}
-                <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100
+                <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100
                                 transition-opacity flex items-center justify-center text-white text-xl">
                   📷
                 </div>
@@ -170,13 +170,13 @@ const Profile: React.FC = () => {
             </div>
 
             <div>
-              <h2 className="text-xl font-bold text-white">{user?.fullName}</h2>
-              <p className="text-slate-400 text-sm">{user?.email}</p>
+              <h2 className="text-xl font-bold text-slate-800">{user?.fullName}</h2>
+              <p className="text-slate-500 text-sm">{user?.email}</p>
               <div className="flex flex-wrap items-center gap-2 mt-2">
-                <span className="badge bg-primary-500/15 text-primary-400 border border-primary-500/30 capitalize">
+                <span className="badge bg-primary-50 text-primary-600 border border-primary-200 capitalize">
                   {user?.role}
                 </span>
-                <span className="badge bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
+                <span className="badge bg-emerald-50 text-emerald-600 border border-emerald-200">
                   ● Active
                 </span>
               </div>
@@ -184,9 +184,9 @@ const Profile: React.FC = () => {
           </div>
 
           {/* Profile Form */}
-          <div className="border-t border-slate-700/40 pt-5">
+          <div className="border-t border-slate-200 pt-5">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-base font-bold text-white">Personal Information</h3>
+              <h3 className="text-base font-bold text-slate-800">Personal Information</h3>
               {!isEditing && (
                 <button
                   onClick={() => setIsEditing(true)}
@@ -269,9 +269,9 @@ const Profile: React.FC = () => {
                   { label: 'Address', value: user?.address || '—' },
                   { label: 'Member Since', value: user?.createdAt ? new Date(user.createdAt).toLocaleDateString('en-NP') : '—' },
                 ].map(({ label, value }) => (
-                  <div key={label} className="bg-slate-800/40 rounded-xl p-3">
+                  <div key={label} className="bg-slate-50 border border-slate-100 rounded-xl p-3">
                     <p className="text-slate-500 text-xs mb-1">{label}</p>
-                    <p className="text-white text-sm truncate">{value}</p>
+                    <p className="text-slate-800 text-sm truncate">{value}</p>
                   </div>
                 ))}
               </div>
@@ -280,9 +280,9 @@ const Profile: React.FC = () => {
         </div>
 
         {/* Change Password */}
-        <div className="glass-card-dark p-6">
+        <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-200">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-base font-bold text-white flex items-center gap-2">
+            <h3 className="text-base font-bold text-slate-800 flex items-center gap-2">
               🔑 Change Password
             </h3>
             {!isChangingPwd && (
@@ -310,7 +310,7 @@ const Profile: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => setShowPwd((s) => ({ ...s, current: !s.current }))}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-800"
                   >
                     {showPwd.current ? '🙈' : '👁️'}
                   </button>
@@ -334,7 +334,7 @@ const Profile: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => setShowPwd((s) => ({ ...s, new: !s.new }))}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-800"
                   >
                     {showPwd.new ? '🙈' : '👁️'}
                   </button>
@@ -347,7 +347,7 @@ const Profile: React.FC = () => {
                         <div
                           key={i}
                           className={`flex-1 h-1.5 rounded-full transition-all duration-300 ${
-                            i < strength.level ? strength.color : 'bg-slate-700'
+                            i < strength.level ? strength.color : 'bg-slate-200'
                           }`}
                         />
                       ))}
@@ -380,14 +380,14 @@ const Profile: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => setShowPwd((s) => ({ ...s, confirm: !s.confirm }))}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-800"
                   >
                     {showPwd.confirm ? '🙈' : '👁️'}
                   </button>
                 </div>
                 {pwdData.confirmNewPassword &&
                   pwdData.newPassword !== pwdData.confirmNewPassword && (
-                  <p className="text-red-400 text-xs mt-1">Passwords do not match</p>
+                  <p className="text-red-500 text-xs mt-1">Passwords do not match</p>
                 )}
               </div>
 
@@ -413,11 +413,11 @@ const Profile: React.FC = () => {
               </div>
             </form>
           ) : (
-            <div className="bg-slate-800/40 rounded-xl p-4 flex items-center gap-4">
+            <div className="bg-slate-50 border border-slate-100 rounded-xl p-4 flex items-center gap-4">
               <span className="text-3xl">🔐</span>
               <div>
-                <p className="text-white text-sm font-medium">Password Protected</p>
-                <p className="text-slate-400 text-xs">
+                <p className="text-slate-800 text-sm font-medium">Password Protected</p>
+                <p className="text-slate-500 text-xs">
                   Last changed:{' '}
                   {user?.updatedAt ? new Date(user.updatedAt).toLocaleDateString('en-NP') : 'Unknown'}
                 </p>

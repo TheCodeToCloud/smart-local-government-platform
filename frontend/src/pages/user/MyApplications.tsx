@@ -73,14 +73,14 @@ const MyApplications: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 py-8 px-4 sm:px-6">
+    <div className="min-h-screen bg-slate-50 py-8 px-4 sm:px-6">
       <div className="max-w-6xl mx-auto">
 
         {/* Header */}
         <div className="flex flex-wrap items-center justify-between gap-4 mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-white">📋 My Applications</h1>
-            <p className="text-slate-400 text-sm mt-1">
+            <h1 className="text-3xl font-bold text-slate-800">📋 My Applications</h1>
+            <p className="text-slate-500 text-sm mt-1">
               {isLoading ? 'Loading...' : `${total} application${total !== 1 ? 's' : ''} found`}
             </p>
           </div>
@@ -88,7 +88,7 @@ const MyApplications: React.FC = () => {
         </div>
 
         {/* Filters & Search */}
-        <div className="glass-card-dark p-5 mb-6 space-y-4">
+        <div className="bg-white p-5 mb-6 space-y-4 rounded-3xl shadow-sm border border-slate-200">
           {/* Search */}
           <div className="relative">
             <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400">🔍</span>
@@ -103,7 +103,7 @@ const MyApplications: React.FC = () => {
 
           {/* Status filter chips */}
           <div>
-            <p className="text-xs text-slate-500 font-medium uppercase tracking-wider mb-2">Status</p>
+            <p className="text-xs text-slate-600 font-medium uppercase tracking-wider mb-2">Status</p>
             <div className="flex flex-wrap gap-2">
               {STATUS_FILTERS.map((f) => (
                 <button
@@ -112,7 +112,7 @@ const MyApplications: React.FC = () => {
                   className={`px-3 py-1.5 rounded-lg text-xs font-medium capitalize transition-all ${
                     status === f.value
                       ? 'bg-primary-600 text-white'
-                      : 'bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700'
+                      : 'bg-slate-100 text-slate-600 hover:text-slate-800 hover:bg-slate-200'
                   }`}
                 >
                   {f.label}
@@ -123,14 +123,14 @@ const MyApplications: React.FC = () => {
 
           {/* Certificate type filter */}
           <div>
-            <p className="text-xs text-slate-500 font-medium uppercase tracking-wider mb-2">Certificate Type</p>
+            <p className="text-xs text-slate-600 font-medium uppercase tracking-wider mb-2">Certificate Type</p>
             <div className="flex flex-wrap gap-2">
               <button
                 onClick={() => setParam('type', 'all')}
                 className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
                   certType === 'all'
                     ? 'bg-secondary-600 text-white'
-                    : 'bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700'
+                    : 'bg-slate-100 text-slate-600 hover:text-slate-800 hover:bg-slate-200'
                 }`}
               >
                 All Types
@@ -142,7 +142,7 @@ const MyApplications: React.FC = () => {
                   className={`px-3 py-1.5 rounded-lg text-xs font-medium capitalize transition-all flex items-center gap-1.5 ${
                     certType === ct.id
                       ? 'bg-secondary-600 text-white'
-                      : 'bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700'
+                      : 'bg-slate-100 text-slate-600 hover:text-slate-800 hover:bg-slate-200'
                   }`}
                 >
                   <span>{ct.icon}</span> {ct.labelEnglish}
@@ -158,19 +158,19 @@ const MyApplications: React.FC = () => {
             <Loader size="md" text="Loading applications..." />
           </div>
         ) : fetchError ? (
-          <div className="glass-card-dark p-16 text-center">
+          <div className="bg-white p-16 text-center rounded-3xl shadow-sm border border-slate-200">
             <div className="text-5xl mb-4">⚠️</div>
-            <h3 className="text-xl font-semibold text-white mb-2">Could Not Load Applications</h3>
-            <p className="text-slate-400 mb-6">{fetchError}</p>
+            <h3 className="text-xl font-semibold text-slate-800 mb-2">Could Not Load Applications</h3>
+            <p className="text-slate-500 mb-6">{fetchError}</p>
             <button onClick={fetchApplications} className="btn-primary">
               Try Again
             </button>
           </div>
         ) : applications.length === 0 ? (
-          <div className="glass-card-dark p-16 text-center">
+          <div className="bg-white p-16 text-center rounded-3xl shadow-sm border border-slate-200">
             <div className="text-7xl mb-4">📭</div>
-            <h3 className="text-xl font-semibold text-white mb-2">No Applications Found</h3>
-            <p className="text-slate-400 mb-6">
+            <h3 className="text-xl font-semibold text-slate-800 mb-2">No Applications Found</h3>
+            <p className="text-slate-500 mb-6">
               {status !== 'all' || certType !== 'all' || searchQuery
                 ? 'Try adjusting your filters.'
                 : 'You haven\'t applied for any certificates yet.'}
@@ -180,10 +180,10 @@ const MyApplications: React.FC = () => {
         ) : (
           <>
             {/* Desktop Table */}
-            <div className="glass-card-dark overflow-hidden mb-5 hidden md:block">
+            <div className="bg-white overflow-hidden mb-5 hidden md:block rounded-3xl shadow-sm border border-slate-200">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-slate-700/50">
+                  <tr className="border-b border-slate-200">
                     <th className="table-header text-left">App. Number</th>
                     <th className="table-header text-left">Certificate Type</th>
                     <th className="table-header text-left">Date</th>
@@ -196,8 +196,8 @@ const MyApplications: React.FC = () => {
                   {applications.map((app) => {
                     const ct = CERTIFICATE_TYPES.find((c) => c.id === app.certificateType);
                     return (
-                      <tr key={app._id} className="hover:bg-white/5 transition-colors">
-                        <td className="table-cell font-mono text-primary-400 font-semibold">
+                      <tr key={app._id} className="hover:bg-slate-50 transition-colors">
+                        <td className="table-cell font-mono text-primary-600 font-semibold">
                           {app.applicationNumber}
                         </td>
                         <td className="table-cell">
@@ -205,10 +205,10 @@ const MyApplications: React.FC = () => {
                             <span>{ct?.icon}</span> {app.certificateType}
                           </span>
                         </td>
-                        <td className="table-cell text-slate-400">
+                        <td className="table-cell text-slate-500">
                           {new Date(app.createdAt).toLocaleDateString('en-NP')}
                         </td>
-                        <td className="table-cell text-slate-400">
+                        <td className="table-cell text-slate-500">
                           {app.estimatedCompletionDate
                             ? new Date(app.estimatedCompletionDate).toLocaleDateString('en-NP')
                             : '—'}
@@ -219,7 +219,7 @@ const MyApplications: React.FC = () => {
                         <td className="table-cell">
                           <Link
                             to={`/applications/${app._id}`}
-                            className="text-primary-400 hover:text-primary-300 text-xs font-medium whitespace-nowrap"
+                            className="text-primary-600 hover:text-primary-700 text-xs font-medium whitespace-nowrap"
                           >
                             View Details →
                           </Link>
@@ -239,18 +239,18 @@ const MyApplications: React.FC = () => {
                   <Link
                     key={app._id}
                     to={`/applications/${app._id}`}
-                    className="flex items-center gap-4 glass-card-dark p-4 border border-slate-700/30
-                               hover:border-primary-600/40 transition-all group"
+                    className="flex items-center gap-4 bg-white p-4 border border-slate-200 rounded-2xl
+                               hover:border-primary-300 transition-all group"
                   >
-                    <div className="w-12 h-12 rounded-xl bg-gov-gradient flex items-center justify-center
+                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-100 to-teal-100 text-blue-600 flex items-center justify-center
                                     text-xl flex-shrink-0">
                       {ct?.icon || '📋'}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-primary-400 font-mono font-semibold text-sm">
+                      <p className="text-primary-600 font-mono font-semibold text-sm">
                         {app.applicationNumber}
                       </p>
-                      <p className="text-slate-400 text-xs capitalize mt-0.5">
+                      <p className="text-slate-500 text-xs capitalize mt-0.5">
                         {app.certificateType} · {new Date(app.createdAt).toLocaleDateString('en-NP')}
                       </p>
                     </div>
@@ -278,7 +278,7 @@ const MyApplications: React.FC = () => {
                       className={`w-8 h-8 rounded-lg text-xs font-medium transition-all ${
                         p === page
                           ? 'bg-primary-600 text-white'
-                          : 'text-slate-400 hover:bg-slate-700'
+                          : 'text-slate-500 hover:bg-slate-100'
                       }`}
                     >
                       {p}

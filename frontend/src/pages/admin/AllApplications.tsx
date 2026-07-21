@@ -142,15 +142,15 @@ const AllApplications: React.FC = () => {
   const isAllSelected = applications.length > 0 && selectedIds.length === applications.filter(a => a.status === 'pending').length && applications.filter(a => a.status === 'pending').length > 0;
 
   return (
-    <div className="min-h-screen bg-slate-950 py-8 px-4 sm:px-6">
+    <div className="min-h-screen bg-slate-50 py-8 px-4 sm:px-6">
       <div className="max-w-[1400px] mx-auto">
         {/* Header */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
           <div>
-            <h1 className="text-3xl font-bold text-white flex items-center gap-2">
-              <span className="text-primary-400">📋</span> Application Management
+            <h1 className="text-3xl font-bold text-slate-800 flex items-center gap-2">
+              <span className="text-primary-600">📋</span> Application Management
             </h1>
-            <p className="text-slate-400 text-sm mt-1">
+            <p className="text-slate-500 text-sm mt-1">
               Review and manage all certificate requests ({total} total)
             </p>
           </div>
@@ -163,7 +163,7 @@ const AllApplications: React.FC = () => {
         </div>
 
         {/* Top Filters & Search Bar */}
-        <div className="glass-card-dark p-5 mb-6">
+        <div className="bg-white p-5 mb-6 rounded-3xl shadow-sm border border-slate-200">
           <div className="flex flex-col lg:flex-row gap-4 justify-between">
             {/* Status Tabs */}
             <div className="flex gap-2 overflow-x-auto pb-2 lg:pb-0 hide-scrollbar">
@@ -173,13 +173,13 @@ const AllApplications: React.FC = () => {
                   onClick={() => setFilter('status', s)}
                   className={`px-4 py-2 rounded-xl text-sm font-medium capitalize whitespace-nowrap transition-all border ${
                     statusFilter === s
-                      ? 'bg-primary-600/20 text-primary-400 border-primary-500/50'
-                      : 'bg-slate-800/50 text-slate-400 border-slate-700/50 hover:text-white hover:bg-slate-800'
+                      ? 'bg-primary-600/20 text-primary-600 border-primary-200'
+                      : 'bg-slate-50 text-slate-500 border-slate-200 hover:text-slate-800 hover:bg-slate-100'
                   }`}
                 >
                   {s === 'all' ? 'All' : s.replace('_', ' ')}
                   {s !== 'all' && stats[s] !== undefined && (
-                    <span className={`ml-2 px-1.5 py-0.5 rounded-full text-xs ${statusFilter === s ? 'bg-primary-600/40' : 'bg-slate-700'}`}>
+                    <span className={`ml-2 px-1.5 py-0.5 rounded-full text-xs ${statusFilter === s ? 'bg-primary-600/40 text-slate-800' : 'bg-slate-200 text-slate-600'}`}>
                       {stats[s]}
                     </span>
                   )}
@@ -189,7 +189,7 @@ const AllApplications: React.FC = () => {
 
             {/* Search */}
             <form onSubmit={handleSearchSubmit} className="relative min-w-[300px]">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">🔍</span>
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500">🔍</span>
               <input
                 type="text"
                 value={localSearch}
@@ -198,7 +198,7 @@ const AllApplications: React.FC = () => {
                 className="form-input pl-10 h-full py-2.5 text-sm"
               />
               {localSearch && (
-                <button type="button" onClick={() => { setLocalSearch(''); setFilter('search', ''); }} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white text-xs">
+                <button type="button" onClick={() => { setLocalSearch(''); setFilter('search', ''); }} className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 text-xs">
                   Clear
                 </button>
               )}
@@ -206,13 +206,13 @@ const AllApplications: React.FC = () => {
           </div>
 
           {/* Secondary Filters */}
-          <div className="flex flex-wrap gap-4 mt-4 pt-4 border-t border-slate-800/50">
+          <div className="flex flex-wrap gap-4 mt-4 pt-4 border-t border-slate-200">
             <div className="flex items-center gap-2">
-              <span className="text-xs font-semibold text-slate-500 uppercase">Type:</span>
+              <span className="text-xs font-semibold text-slate-600 uppercase">Type:</span>
               <select 
                 value={typeFilter} 
                 onChange={e => setFilter('certificateType', e.target.value)}
-                className="bg-slate-800 border border-slate-700 text-slate-300 text-sm rounded-lg px-3 py-1.5 outline-none focus:border-primary-500"
+                className="bg-white border border-slate-200 text-slate-700 text-sm rounded-lg px-3 py-1.5 outline-none focus:border-primary-500"
               >
                 <option value="all">All Types</option>
                 <option value="birth">Birth</option>
@@ -226,11 +226,11 @@ const AllApplications: React.FC = () => {
             </div>
 
             <div className="flex items-center gap-2">
-              <span className="text-xs font-semibold text-slate-500 uppercase">Priority:</span>
+              <span className="text-xs font-semibold text-slate-600 uppercase">Priority:</span>
               <select 
                 value={priorityFilter} 
                 onChange={e => setFilter('priority', e.target.value)}
-                className="bg-slate-800 border border-slate-700 text-slate-300 text-sm rounded-lg px-3 py-1.5 outline-none focus:border-primary-500"
+                className="bg-white border border-slate-200 text-slate-700 text-sm rounded-lg px-3 py-1.5 outline-none focus:border-primary-500"
               >
                 <option value="all">All</option>
                 <option value="normal">Normal</option>
@@ -239,19 +239,19 @@ const AllApplications: React.FC = () => {
             </div>
 
             <div className="flex items-center gap-2 ml-auto">
-              <span className="text-xs font-semibold text-slate-500 uppercase">Date Range:</span>
+              <span className="text-xs font-semibold text-slate-600 uppercase">Date Range:</span>
               <input 
                 type="date" 
                 value={dateFrom} 
                 onChange={e => setFilter('dateFrom', e.target.value)}
-                className="bg-slate-800 border border-slate-700 text-slate-300 text-sm rounded-lg px-2 py-1.5 outline-none focus:border-primary-500"
+                className="bg-white border border-slate-200 text-slate-700 text-sm rounded-lg px-2 py-1.5 outline-none focus:border-primary-500"
               />
-              <span className="text-slate-500">-</span>
+              <span className="text-slate-600">-</span>
               <input 
                 type="date" 
                 value={dateTo} 
                 onChange={e => setFilter('dateTo', e.target.value)}
-                className="bg-slate-800 border border-slate-700 text-slate-300 text-sm rounded-lg px-2 py-1.5 outline-none focus:border-primary-500"
+                className="bg-white border border-slate-200 text-slate-700 text-sm rounded-lg px-2 py-1.5 outline-none focus:border-primary-500"
               />
             </div>
           </div>
@@ -259,8 +259,8 @@ const AllApplications: React.FC = () => {
 
         {/* Bulk Actions Bar */}
         {selectedIds.length > 0 && (
-          <div className="bg-primary-900/40 border border-primary-500/30 rounded-xl p-3 mb-4 flex justify-between items-center animate-fade-in">
-            <span className="text-primary-300 text-sm font-medium">
+          <div className="bg-primary-50 border border-primary-200 rounded-xl p-3 mb-4 flex justify-between items-center animate-fade-in">
+            <span className="text-primary-700 text-sm font-medium">
               {selectedIds.length} application(s) selected
             </span>
             <button 
@@ -274,14 +274,14 @@ const AllApplications: React.FC = () => {
         )}
 
         {/* Applications Table */}
-        <div className="glass-card-dark overflow-hidden">
+        <div className="bg-white overflow-hidden rounded-3xl shadow-sm border border-slate-200">
           {isLoading ? (
             <div className="flex justify-center py-20"><Loader size="md" text="Loading applications..." /></div>
           ) : applications.length === 0 ? (
             <div className="text-center py-20">
               <div className="text-6xl mb-4 opacity-50">📭</div>
-              <h3 className="text-xl font-bold text-white mb-2">No Applications Found</h3>
-              <p className="text-slate-400">Try adjusting your filters or search query.</p>
+              <h3 className="text-xl font-bold text-slate-800 mb-2">No Applications Found</h3>
+              <p className="text-slate-500">Try adjusting your filters or search query.</p>
               {(statusFilter !== 'all' || search || typeFilter !== 'all') && (
                 <button 
                   onClick={() => setSearchParams({})} 
@@ -297,14 +297,14 @@ const AllApplications: React.FC = () => {
               <div className="hidden md:block overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="bg-slate-900/80 border-b border-slate-700/50">
+                    <tr className="bg-slate-50 border-b border-slate-200">
                       <th className="px-4 py-4 text-left w-10">
                         <input 
                           type="checkbox" 
                           checked={isAllSelected}
                           onChange={handleSelectAll}
                           disabled={applications.filter(a => a.status === 'pending').length === 0}
-                          className="w-4 h-4 rounded border-slate-600 bg-slate-800 text-primary-500 focus:ring-primary-500 focus:ring-offset-slate-900"
+                          className="w-4 h-4 rounded border-slate-300 bg-white text-primary-600 focus:ring-primary-500 focus:ring-offset-white"
                         />
                       </th>
                       <th className="table-header text-left">App Number</th>
@@ -322,22 +322,22 @@ const AllApplications: React.FC = () => {
                       const isPending = app.status === 'pending';
                       
                       return (
-                        <tr key={app._id} className="hover:bg-white/5 transition-colors border-b border-slate-800/50 last:border-0">
+                        <tr key={app._id} className="hover:bg-slate-50 transition-colors border-b border-slate-200 last:border-0">
                           <td className="px-4 py-4">
                             <input 
                               type="checkbox" 
                               checked={selectedIds.includes(app._id)}
                               onChange={() => handleSelectOne(app._id)}
                               disabled={!isPending}
-                              className="w-4 h-4 rounded border-slate-600 bg-slate-800 text-primary-500 focus:ring-primary-500 focus:ring-offset-slate-900 disabled:opacity-30"
+                              className="w-4 h-4 rounded border-slate-300 bg-white text-primary-600 focus:ring-primary-500 focus:ring-offset-white disabled:opacity-30"
                             />
                           </td>
-                          <td className="table-cell font-mono text-primary-400 font-medium">
+                          <td className="table-cell font-mono text-primary-600 font-medium">
                             {app.applicationNumber}
                           </td>
                           <td className="table-cell">
                             <div>
-                              <p className="text-white font-medium flex items-center gap-2">
+                              <p className="text-slate-800 font-medium flex items-center gap-2">
                                 {userObj?.fullName || '—'}
                                 {app.flaggedForReview && (
                                   <span className="text-red-400 text-[10px] font-bold bg-red-500/10 px-1.5 py-0.5 rounded border border-red-500/30" title={app.flagReasons?.join('\n')}>
@@ -348,7 +348,7 @@ const AllApplications: React.FC = () => {
                               <p className="text-slate-500 text-xs">{userObj?.email || ''}</p>
                             </div>
                           </td>
-                          <td className="table-cell capitalize font-medium text-slate-300">
+                          <td className="table-cell capitalize font-medium text-slate-600">
                             {app.certificateType}
                           </td>
                           <td className="table-cell">
@@ -358,7 +358,7 @@ const AllApplications: React.FC = () => {
                               <span className="text-slate-500 text-xs">Normal</span>
                             )}
                           </td>
-                          <td className="table-cell text-slate-400 text-xs">
+                          <td className="table-cell text-slate-500 text-xs">
                             {new Date(app.createdAt).toLocaleDateString('en-NP', { month: 'short', day: 'numeric', year: 'numeric'})}
                           </td>
                           <td className="table-cell">
@@ -367,7 +367,7 @@ const AllApplications: React.FC = () => {
                           <td className="table-cell text-right pr-6">
                             <Link
                               to={`/admin/applications/${app._id}`}
-                              className="btn-outline py-1.5 px-3 text-xs whitespace-nowrap bg-slate-800/50 hover:bg-primary-600"
+                              className="btn-outline py-1.5 px-3 text-xs whitespace-nowrap bg-slate-50 hover:bg-primary-600 hover:text-white"
                             >
                               Review →
                             </Link>
@@ -380,14 +380,14 @@ const AllApplications: React.FC = () => {
               </div>
 
               {/* Mobile Card View */}
-              <div className="md:hidden divide-y divide-slate-800">
+              <div className="md:hidden divide-y divide-slate-200">
                 {applications.map(app => {
                   const userObj = typeof app.userId === 'object' ? app.userId as any : null;
                   return (
                     <div key={app._id} className="p-4 space-y-3">
                       <div className="flex justify-between items-start">
                         <div>
-                          <span className="font-mono text-primary-400 font-medium text-sm block mb-1">
+                          <span className="font-mono text-primary-600 font-medium text-sm block mb-1">
                             {app.applicationNumber}
                             {app.flaggedForReview && (
                               <span className="ml-2 text-red-400 text-[10px] font-bold bg-red-500/10 px-1.5 py-0.5 rounded border border-red-500/30">
@@ -403,13 +403,13 @@ const AllApplications: React.FC = () => {
                       </div>
                       
                       <div>
-                        <p className="text-white font-medium">{userObj?.fullName || '—'}</p>
-                        <p className="text-slate-400 text-xs capitalize">{app.certificateType} Certificate</p>
+                        <p className="text-slate-800 font-medium">{userObj?.fullName || '—'}</p>
+                        <p className="text-slate-500 text-xs capitalize">{app.certificateType} Certificate</p>
                       </div>
                       
                       <div className="flex justify-between items-center pt-2">
                         <span className="text-slate-500 text-xs">{new Date(app.createdAt).toLocaleDateString()}</span>
-                        <Link to={`/admin/applications/${app._id}`} className="text-primary-400 text-sm font-semibold">
+                        <Link to={`/admin/applications/${app._id}`} className="text-primary-600 text-sm font-semibold">
                           Review →
                         </Link>
                       </div>
@@ -420,16 +420,16 @@ const AllApplications: React.FC = () => {
 
               {/* Pagination */}
               {totalPages > 1 && (
-                <div className="bg-slate-900/50 px-6 py-4 border-t border-slate-700/50 flex flex-col sm:flex-row items-center justify-between gap-4">
-                  <div className="text-sm text-slate-400">
-                    Showing <span className="font-medium text-white">{(page - 1) * limit + 1}</span> to <span className="font-medium text-white">{Math.min(page * limit, total)}</span> of <span className="font-medium text-white">{total}</span> results
+                <div className="bg-slate-50 px-6 py-4 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4">
+                  <div className="text-sm text-slate-500">
+                    Showing <span className="font-medium text-slate-800">{(page - 1) * limit + 1}</span> to <span className="font-medium text-slate-800">{Math.min(page * limit, total)}</span> of <span className="font-medium text-slate-800">{total}</span> results
                   </div>
                   
                   <div className="flex items-center gap-2">
                     <button 
                       onClick={() => setFilter('page', String(page - 1))}
                       disabled={page === 1}
-                      className="p-2 rounded-lg bg-slate-800 text-slate-300 disabled:opacity-50 hover:bg-slate-700 transition-colors"
+                      className="p-2 rounded-lg bg-white border border-slate-200 text-slate-700 disabled:opacity-50 hover:bg-slate-100 transition-colors"
                     >
                       ← Prev
                     </button>
@@ -447,10 +447,10 @@ const AllApplications: React.FC = () => {
                           <button
                             key={pageNum}
                             onClick={() => setFilter('page', String(pageNum))}
-                            className={`w-8 h-8 rounded-lg text-sm font-medium transition-colors ${
+                            className={`w-8 h-8 rounded-lg text-sm font-medium transition-colors border ${
                               page === pageNum
-                                ? 'bg-primary-600 text-white'
-                                : 'bg-slate-800 text-slate-400 hover:bg-slate-700'
+                                ? 'bg-primary-600 text-white border-primary-600'
+                                : 'bg-white border-slate-200 text-slate-500 hover:bg-slate-100'
                             }`}
                           >
                             {pageNum}
@@ -462,7 +462,7 @@ const AllApplications: React.FC = () => {
                     <button 
                       onClick={() => setFilter('page', String(page + 1))}
                       disabled={page === totalPages}
-                      className="p-2 rounded-lg bg-slate-800 text-slate-300 disabled:opacity-50 hover:bg-slate-700 transition-colors"
+                      className="p-2 rounded-lg bg-white border border-slate-200 text-slate-700 disabled:opacity-50 hover:bg-slate-100 transition-colors"
                     >
                       Next →
                     </button>

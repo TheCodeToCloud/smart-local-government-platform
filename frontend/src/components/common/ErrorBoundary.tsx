@@ -32,35 +32,27 @@ class ErrorBoundary extends Component<Props, State> {
   public render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen bg-slate-950 flex items-center justify-center px-4">
-          <div className="max-w-lg w-full text-center animate-fade-in">
+        <div className="min-h-screen bg-slate-50 flex items-center justify-center px-4">
+          <div className="bg-white p-8 rounded-3xl max-w-lg w-full text-center border border-red-200 shadow-sm animate-fade-in">
             <div className="text-8xl mb-6">⚠️</div>
-            <h1 className="text-4xl font-extrabold text-white mb-4">
-              Something went wrong
-            </h1>
-            <p className="text-slate-400 mb-2 text-lg">
-              An unexpected error occurred in the application. We apologize for the inconvenience.
+            <h2 className="text-2xl font-bold text-slate-800 mb-2">Something went wrong</h2>
+            <p className="text-slate-500 text-sm mb-6">
+              {this.state.errorMessage || 'An unexpected error occurred.'}
             </p>
             {import.meta.env.DEV && this.state.errorMessage && (
-              <p className="text-xs text-red-400/70 font-mono bg-slate-900 border border-red-500/20 rounded-xl p-3 mb-6 text-left break-all">
+              <p className="text-xs text-red-600 font-mono bg-red-50 border border-red-100 rounded-xl p-3 mb-6 text-left break-all">
                 {this.state.errorMessage}
               </p>
             )}
             <div className="flex flex-col sm:flex-row gap-3 justify-center mt-8">
               <button
-                onClick={this.handleReset}
-                className="btn-primary py-3 px-8"
-              >
-                🏠 Return to Home
-              </button>
-              <button
                 onClick={() => window.location.reload()}
-                className="btn-outline py-3 px-8"
+                className="btn-primary py-2 px-6 shadow-sm"
               >
-                🔄 Try Again
+                🔄 Reload Page
               </button>
             </div>
-            <p className="text-slate-600 text-xs mt-8">
+            <p className="text-slate-400 text-xs mt-8">
               If this problem persists, please contact the platform administrator.
             </p>
           </div>

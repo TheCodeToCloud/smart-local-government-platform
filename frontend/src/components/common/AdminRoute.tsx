@@ -8,8 +8,8 @@ const AdminRoute: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-950">
-        <Loader size="lg" text="Verifying admin access..." />
+      <div className="min-h-screen flex items-center justify-center bg-slate-50">
+        <Loader size="lg" text="Loading admin area..." />
       </div>
     );
   }

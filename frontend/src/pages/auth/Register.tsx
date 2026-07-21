@@ -131,21 +131,21 @@ const Register: React.FC = () => {
     `form-input ${errors[field] ? 'border-red-500/50 focus:ring-red-500' : ''}`;
 
   return (
-    <div className="min-h-screen bg-slate-950 flex items-center justify-center px-4 py-12">
+    <div className="min-h-screen bg-slate-50 flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-2xl animate-slide-up">
         {/* Header */}
         <div className="text-center mb-8">
-          <div className="w-16 h-16 rounded-2xl bg-gov-gradient flex items-center justify-center
-                          text-4xl mx-auto mb-4 shadow-glow-blue">
+          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-600 to-teal-600 flex items-center justify-center
+                          text-4xl mx-auto mb-4 shadow-lg">
             🇳🇵
           </div>
-          <h1 className="text-3xl font-bold text-white mb-2">Create Your Account</h1>
-          <p className="text-slate-400 text-sm">
+          <h1 className="text-3xl font-bold text-slate-800 mb-2">Create Your Account</h1>
+          <p className="text-slate-500 text-sm">
             Join Nepal's Smart Government Platform — access all digital services
           </p>
         </div>
 
-        <div className="glass-card-dark p-8 shadow-card">
+        <div className="bg-white p-8 rounded-3xl shadow-xl border border-slate-200">
           <form id="register-form" onSubmit={handleSubmit} className="space-y-5" noValidate>
             {/* API Error */}
             {apiError && (
@@ -243,7 +243,7 @@ const Register: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
                     tabIndex={-1}
                   >
                     {showPassword ? '🙈' : '👁️'}
@@ -259,7 +259,7 @@ const Register: React.FC = () => {
                         <div
                           key={i}
                           className={`h-1 flex-1 rounded-full transition-all duration-300 ${
-                            i <= passwordStrength.level ? passwordStrength.color : 'bg-slate-700'
+                            i <= passwordStrength.level ? passwordStrength.color : 'bg-slate-200'
                           }`}
                         />
                       ))}
@@ -294,7 +294,7 @@ const Register: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => setShowConfirm(!showConfirm)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-200"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
                     tabIndex={-1}
                   >
                     {showConfirm ? '🙈' : '👁️'}
@@ -336,16 +336,16 @@ const Register: React.FC = () => {
                   type="checkbox"
                   checked={formData.agreeTerms}
                   onChange={handleChange}
-                  className="w-4 h-4 mt-0.5 rounded border-slate-600 bg-slate-700 text-primary-600
-                             focus:ring-primary-500 focus:ring-offset-slate-900 flex-shrink-0"
+                  className="w-4 h-4 mt-0.5 rounded border-slate-300 bg-white text-primary-600
+                             focus:ring-primary-500 focus:ring-offset-white flex-shrink-0"
                 />
-                <span className="text-sm text-slate-400 group-hover:text-slate-300 transition-colors">
+                <span className="text-sm text-slate-600 group-hover:text-slate-900 transition-colors">
                   I agree to the{' '}
-                  <Link to="/terms" className="text-primary-400 hover:text-primary-300">
+                  <Link to="/terms" className="text-primary-600 hover:text-primary-700">
                     Terms & Conditions
                   </Link>{' '}
                   and{' '}
-                  <Link to="/privacy" className="text-primary-400 hover:text-primary-300">
+                  <Link to="/privacy" className="text-primary-600 hover:text-primary-700">
                     Privacy Policy
                   </Link>{' '}
                   of Nepal Government Digital Services
@@ -376,9 +376,9 @@ const Register: React.FC = () => {
             </button>
           </form>
 
-          <p className="text-center text-sm text-slate-400 mt-6">
+          <p className="text-center text-sm text-slate-500 mt-6">
             Already have an account?{' '}
-            <Link to="/login" className="text-primary-400 hover:text-primary-300 font-semibold">
+            <Link to="/login" className="text-primary-600 hover:text-primary-700 font-semibold">
               Sign in
             </Link>
           </p>

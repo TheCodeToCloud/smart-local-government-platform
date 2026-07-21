@@ -67,18 +67,18 @@ const SuccessModal: React.FC<{ appNumber: string; onClose: () => void }> = ({
   appNumber, onClose,
 }) => (
   <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-    <div className="glass-card-dark p-8 max-w-md w-full text-center animate-slide-up border border-emerald-500/30">
+    <div className="bg-white p-8 max-w-md w-full text-center animate-slide-up rounded-3xl shadow-xl border border-slate-200">
       <div className="text-6xl mb-4">🎉</div>
-      <h2 className="text-2xl font-bold text-white mb-2">Application Submitted!</h2>
-      <p className="text-slate-400 mb-5">
+      <h2 className="text-2xl font-bold text-slate-800 mb-2">Application Submitted!</h2>
+      <p className="text-slate-500 mb-5">
         आपको आवेदन सफलतापूर्वक पेश गरियो
       </p>
-      <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-xl p-4 mb-6">
-        <p className="text-slate-400 text-sm mb-1">Your Application Number</p>
-        <p className="text-emerald-400 font-mono text-2xl font-bold">{appNumber}</p>
+      <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 mb-6">
+        <p className="text-slate-500 text-sm mb-1">Your Application Number</p>
+        <p className="text-emerald-600 font-mono text-2xl font-bold">{appNumber}</p>
         <p className="text-slate-500 text-xs mt-1">Save this number for future reference</p>
       </div>
-      <p className="text-slate-400 text-sm mb-6">
+      <p className="text-slate-500 text-sm mb-6">
         You will be notified when your application status changes. 
         Estimated processing time: 5–7 business days.
       </p>
@@ -230,7 +230,7 @@ const ApplyCertificate: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 py-8 px-4 sm:px-6">
+    <div className="min-h-screen bg-slate-50 py-8 px-4 sm:px-6">
       {/* Success Modal */}
       {successAppNumber && (
         <SuccessModal
@@ -242,8 +242,8 @@ const ApplyCertificate: React.FC = () => {
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-white">📝 Apply for Certificate</h1>
-          <p className="text-slate-400 text-sm mt-1">
+          <h1 className="text-3xl font-bold text-slate-800">📝 Apply for Certificate</h1>
+          <p className="text-slate-500 text-sm mt-1">
             नमस्ते {user?.fullName.split(' ')[0]}! — Follow the steps to submit your application
           </p>
         </div>
@@ -254,7 +254,7 @@ const ApplyCertificate: React.FC = () => {
         {/* Priority toggle (shown on step 1 & 2) */}
         {(step === 1 || step === 2) && (
           <div className="flex gap-3 mb-6">
-            <p className="text-slate-400 text-sm self-center">Priority:</p>
+            <p className="text-slate-500 text-sm self-center">Priority:</p>
             {(['normal', 'urgent'] as const).map((p) => (
               <button
                 key={p}
@@ -262,9 +262,9 @@ const ApplyCertificate: React.FC = () => {
                 className={`px-4 py-2 rounded-xl text-sm font-medium border capitalize transition-all
                   ${formState.priority === p
                     ? p === 'urgent'
-                      ? 'border-amber-500 bg-amber-500/15 text-amber-400'
-                      : 'border-primary-500 bg-primary-500/10 text-primary-400'
-                    : 'border-slate-700 text-slate-400 hover:border-slate-500'
+                      ? 'border-amber-500 bg-amber-50 text-amber-600'
+                      : 'border-primary-500 bg-primary-50 text-primary-700'
+                    : 'border-slate-300 bg-white text-slate-500 hover:border-slate-400 hover:bg-slate-50'
                   }`}
               >
                 {p === 'urgent' ? '⚡ Urgent' : '📋 Normal'}
@@ -274,7 +274,7 @@ const ApplyCertificate: React.FC = () => {
         )}
 
         {/* Form Card */}
-        <div className="glass-card-dark p-6 sm:p-8 mb-6 animate-fade-in">
+        <div className="bg-white p-6 sm:p-8 mb-6 rounded-3xl shadow-md border border-slate-200 animate-fade-in">
           {step === 1 && (
             <CertificateTypeSelector
               selected={formState.certType}
@@ -334,9 +334,9 @@ const ApplyCertificate: React.FC = () => {
 
         {/* Error */}
         {submitError && (
-          <div className="bg-red-500/10 border border-red-500/30 rounded-xl px-4 py-3 mb-4 flex gap-3">
-            <span className="text-red-400">⚠️</span>
-            <p className="text-red-400 text-sm">{submitError}</p>
+          <div className="bg-red-50 border border-red-200 rounded-xl px-4 py-3 mb-4 flex gap-3">
+            <span className="text-red-500">⚠️</span>
+            <p className="text-red-500 text-sm">{submitError}</p>
           </div>
         )}
 

@@ -64,10 +64,10 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex bg-slate-950">
+    <div className="min-h-screen flex bg-slate-50">
       {/* Left Panel — Decorative */}
       <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden">
-        <div className="absolute inset-0 bg-hero-gradient" />
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-700 via-blue-600 to-teal-600" />
         <div className="absolute inset-0 opacity-20"
           style={{
             backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
@@ -94,7 +94,7 @@ const Login: React.FC = () => {
               { icon: '📡', title: 'Real-Time Tracking', desc: 'Monitor application status live' },
               { icon: '🔒', title: 'Bank-Grade Security', desc: 'Your data is always protected' },
             ].map((feature) => (
-              <div key={feature.title} className="flex items-center gap-4 glass-card p-4 hover-lift">
+              <div key={feature.title} className="flex items-center gap-4 bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-4 hover:-translate-y-1 transition-transform">
                 <span className="text-2xl">{feature.icon}</span>
                 <div>
                   <p className="font-semibold text-white">{feature.title}</p>
@@ -111,18 +111,18 @@ const Login: React.FC = () => {
         <div className="w-full max-w-md animate-slide-up">
           {/* Header */}
           <div className="text-center mb-8">
-            <div className="lg:hidden w-16 h-16 rounded-2xl bg-gov-gradient flex items-center justify-center
-                            text-4xl mx-auto mb-4 shadow-glow-blue">
+            <div className="lg:hidden w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-600 to-teal-600 flex items-center justify-center
+                            text-4xl mx-auto mb-4 shadow-lg">
               🇳🇵
             </div>
-            <h2 className="text-3xl font-bold text-white mb-2">Welcome Back</h2>
-            <p className="text-slate-400 text-sm">
+            <h2 className="text-3xl font-bold text-slate-800 mb-2">Welcome Back</h2>
+            <p className="text-slate-500 text-sm">
               Sign in to access government services
             </p>
           </div>
 
           {/* Form Card */}
-          <div className="glass-card-dark p-8 shadow-card">
+          <div className="bg-white p-8 rounded-3xl shadow-xl border border-slate-200">
             <form id="login-form" onSubmit={handleSubmit} className="space-y-5">
               {/* Error Banner */}
               {error && (
@@ -175,7 +175,7 @@ const Login: React.FC = () => {
                     id="toggle-password-btn"
                     onClick={() => setShowPassword(!showPassword)}
                     className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400
-                               hover:text-slate-200 transition-colors focus:outline-none"
+                               hover:text-slate-600 transition-colors focus:outline-none"
                     tabIndex={-1}
                   >
                     {showPassword ? '🙈' : '👁️'}
@@ -191,16 +191,16 @@ const Login: React.FC = () => {
                     type="checkbox"
                     checked={rememberMe}
                     onChange={(e) => setRememberMe(e.target.checked)}
-                    className="w-4 h-4 rounded border-slate-600 bg-slate-700 text-primary-600
-                               focus:ring-primary-500 focus:ring-offset-slate-900"
+                    className="w-4 h-4 rounded border-slate-300 bg-white text-primary-600
+                               focus:ring-primary-500 focus:ring-offset-white"
                   />
-                  <span className="text-sm text-slate-400 group-hover:text-slate-300 transition-colors">
+                  <span className="text-sm text-slate-600 group-hover:text-slate-900 transition-colors">
                     Remember me
                   </span>
                 </label>
                 <Link
                   to="/forgot-password"
-                  className="text-sm text-primary-400 hover:text-primary-300 transition-colors"
+                  className="text-sm text-primary-600 hover:text-primary-700 transition-colors"
                 >
                   Forgot password?
                 </Link>
@@ -230,16 +230,16 @@ const Login: React.FC = () => {
 
             {/* Divider */}
             <div className="flex items-center gap-3 my-6">
-              <div className="flex-1 h-px bg-slate-700" />
-              <span className="text-slate-500 text-xs uppercase tracking-wider">or</span>
-              <div className="flex-1 h-px bg-slate-700" />
+              <div className="flex-1 h-px bg-slate-200" />
+              <span className="text-slate-400 text-xs uppercase tracking-wider">or</span>
+              <div className="flex-1 h-px bg-slate-200" />
             </div>
 
-            <p className="text-center text-sm text-slate-400">
+            <p className="text-center text-sm text-slate-500">
               Don't have an account?{' '}
               <Link
                 to="/register"
-                className="text-primary-400 hover:text-primary-300 font-semibold transition-colors"
+                className="text-primary-600 hover:text-primary-700 font-semibold transition-colors"
               >
                 Create account
               </Link>

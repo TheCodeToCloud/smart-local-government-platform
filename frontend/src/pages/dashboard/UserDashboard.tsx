@@ -58,7 +58,7 @@ const UserDashboard: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-950">
+      <div className="min-h-screen flex items-center justify-center bg-slate-50">
         <Loader size="lg" text="Loading your dashboard..." />
       </div>
     );
@@ -72,9 +72,9 @@ const UserDashboard: React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-slate-950">
+    <div className="min-h-screen bg-slate-50">
       {/* Header */}
-      <div className="bg-gov-gradient py-10 px-6">
+      <div className="bg-gradient-to-r from-blue-700 to-teal-600 py-10 px-6">
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center justify-between flex-wrap gap-4">
             <div>
@@ -97,8 +97,8 @@ const UserDashboard: React.FC = () => {
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           {statCards.map((card) => (
             <div key={card.label}
-              className={`glass-card-dark p-5 border ${card.border} bg-gradient-to-br ${card.color}
-                          hover:-translate-y-0.5 transition-all duration-200`}
+              className={`bg-white border ${card.border} p-5 rounded-2xl shadow-sm
+                          hover:-translate-y-0.5 hover:shadow-md transition-all duration-200`}
             >
               <div className="flex items-start justify-between mb-3">
                 <span className="text-2xl">{card.icon}</span>
@@ -111,9 +111,9 @@ const UserDashboard: React.FC = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Recent Applications */}
-          <div className="lg:col-span-2 glass-card-dark p-6">
+          <div className="lg:col-span-2 bg-white p-6 border border-slate-200 rounded-2xl shadow-sm">
             <div className="flex items-center justify-between mb-5">
-              <h2 className="text-lg font-bold text-white flex items-center gap-2">
+              <h2 className="text-lg font-bold text-slate-800 flex items-center gap-2">
                 📋 Recent Applications
               </h2>
               <Link to="/applications" className="text-primary-400 hover:text-primary-300 text-sm font-medium">
@@ -134,15 +134,15 @@ const UserDashboard: React.FC = () => {
                   <Link
                     key={app._id}
                     to={`/applications/${app._id}`}
-                    className="flex items-center justify-between p-4 rounded-xl bg-slate-800/40
-                               border border-slate-700/30 hover:border-primary-600/40 hover:bg-slate-800/60
+                    className="flex items-center justify-between p-4 rounded-xl bg-slate-50
+                               border border-slate-100 hover:border-primary-300 hover:bg-slate-100
                                transition-all duration-200 group"
                   >
                     <div className="min-w-0">
-                      <p className="text-white font-medium text-sm group-hover:text-primary-400 transition-colors truncate">
+                      <p className="text-slate-800 font-medium text-sm group-hover:text-primary-600 transition-colors truncate">
                         {app.applicationNumber}
                       </p>
-                      <p className="text-slate-400 text-xs capitalize mt-0.5">
+                      <p className="text-slate-500 text-xs capitalize mt-0.5">
                         {app.certificateType} Certificate
                       </p>
                     </div>
@@ -162,8 +162,8 @@ const UserDashboard: React.FC = () => {
           {/* Sidebar */}
           <div className="space-y-5">
             {/* Quick Actions */}
-            <div className="glass-card-dark p-5">
-              <h2 className="text-base font-bold text-white mb-4">⚡ Quick Actions</h2>
+            <div className="bg-white p-5 border border-slate-200 rounded-2xl shadow-sm">
+              <h2 className="text-base font-bold text-slate-800 mb-4">⚡ Quick Actions</h2>
               <div className="space-y-2">
                 {[
                   { to: '/apply', icon: '📝', label: 'New Application', color: 'text-blue-400' },
@@ -174,7 +174,7 @@ const UserDashboard: React.FC = () => {
                   <Link
                     key={action.to}
                     to={action.to}
-                    className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-white/5
+                    className="flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-slate-50
                                transition-colors group"
                   >
                     <span className={`text-lg group-hover:scale-110 transition-transform`}>
@@ -187,9 +187,9 @@ const UserDashboard: React.FC = () => {
             </div>
 
             {/* Recent Certificates */}
-            <div className="glass-card-dark p-5">
+            <div className="bg-white p-5 border border-slate-200 rounded-2xl shadow-sm">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="text-base font-bold text-white">🎖️ My Certificates</h2>
+                <h2 className="text-base font-bold text-slate-800">🎖️ My Certificates</h2>
                 <Link to="/certificates" className="text-primary-400 hover:text-primary-300 text-xs">
                   View all
                 </Link>
@@ -204,9 +204,9 @@ const UserDashboard: React.FC = () => {
                 <div className="space-y-2">
                   {certificates.slice(0, 3).map((cert) => (
                     <div key={cert._id}
-                      className="flex items-center justify-between p-3 rounded-lg bg-slate-800/40 border border-slate-700/30">
+                      className="flex items-center justify-between p-3 rounded-lg bg-slate-50 border border-slate-100">
                       <div>
-                        <p className="text-white text-xs font-medium truncate max-w-[120px]">
+                        <p className="text-slate-800 text-xs font-medium truncate max-w-[120px]">
                           {cert.certificateNumber}
                         </p>
                         <p className="text-slate-500 text-xs capitalize">{cert.certificateType}</p>
@@ -219,24 +219,24 @@ const UserDashboard: React.FC = () => {
             </div>
 
             {/* Account Info */}
-            <div className="glass-card-dark p-5">
-              <h2 className="text-base font-bold text-white mb-4">👤 Account Info</h2>
+            <div className="bg-white p-5 border border-slate-200 rounded-2xl shadow-sm">
+              <h2 className="text-base font-bold text-slate-800 mb-4">👤 Account Info</h2>
               <div className="space-y-2.5 text-sm">
                 <div className="flex items-center justify-between">
-                  <span className="text-slate-400">Name</span>
-                  <span className="text-white font-medium truncate max-w-[140px]">{user?.fullName}</span>
+                  <span className="text-slate-500">Name</span>
+                  <span className="text-slate-800 font-medium truncate max-w-[140px]">{user?.fullName}</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-slate-400">Email</span>
-                  <span className="text-white truncate max-w-[140px] text-xs">{user?.email}</span>
+                  <span className="text-slate-500">Email</span>
+                  <span className="text-slate-800 truncate max-w-[140px] text-xs">{user?.email}</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-slate-400">Role</span>
-                  <span className="text-primary-400 font-medium capitalize">{user?.role}</span>
+                  <span className="text-slate-500">Role</span>
+                  <span className="text-primary-600 font-medium capitalize">{user?.role}</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-slate-400">Status</span>
-                  <span className="text-emerald-400 font-medium">Active ✓</span>
+                  <span className="text-slate-500">Status</span>
+                  <span className="text-emerald-600 font-medium">Active ✓</span>
                 </div>
               </div>
             </div>

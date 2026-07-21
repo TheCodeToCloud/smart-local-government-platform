@@ -23,24 +23,24 @@ const TimelineStep: React.FC<TimelineStepProps> = ({
   <div className="flex gap-4 relative">
     {/* Connector */}
     {!isLast && (
-      <div className="absolute left-5 top-11 bottom-0 w-0.5 bg-slate-700" />
+      <div className="absolute left-5 top-11 bottom-0 w-0.5 bg-slate-200" />
     )}
     {/* Circle */}
     <div
       className={`w-10 h-10 rounded-full border-2 flex items-center justify-center text-sm
                    z-10 relative flex-shrink-0 transition-all
                    ${done
-                     ? 'border-emerald-500 bg-emerald-500/20 text-emerald-400'
+                     ? 'border-emerald-500 bg-emerald-50 text-emerald-600'
                      : active
-                     ? 'border-primary-500 bg-primary-500/20 text-primary-400 shadow-glow-blue animate-pulse'
-                     : 'border-slate-600 bg-slate-800 text-slate-500'
+                     ? 'border-primary-500 bg-primary-50 text-primary-600 shadow-lg animate-pulse'
+                     : 'border-slate-300 bg-slate-100 text-slate-400'
                    }`}
     >
       {done ? '✓' : icon}
     </div>
     {/* Text */}
     <div className="pb-8">
-      <p className={`font-semibold text-sm ${done ? 'text-emerald-400' : active ? 'text-white' : 'text-slate-500'}`}>
+      <p className={`font-semibold text-sm ${done ? 'text-emerald-600' : active ? 'text-slate-800' : 'text-slate-500'}`}>
         {label}
       </p>
       {sublabel && (
@@ -89,7 +89,7 @@ const ApplicationDetail: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-950">
+      <div className="min-h-screen flex items-center justify-center bg-slate-50">
         <Loader size="md" text="Loading application..." />
       </div>
     );
@@ -97,10 +97,10 @@ const ApplicationDetail: React.FC = () => {
 
   if (error || !application) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-950">
-        <div className="glass-card-dark p-10 text-center max-w-sm">
+      <div className="min-h-screen flex items-center justify-center bg-slate-50">
+        <div className="bg-white p-10 text-center max-w-sm rounded-3xl shadow-sm border border-slate-200">
           <p className="text-5xl mb-4">❌</p>
-          <p className="text-red-400 mb-4">{error || 'Not found'}</p>
+          <p className="text-red-500 mb-4">{error || 'Not found'}</p>
           <Link to="/applications" className="btn-primary">Back to Applications</Link>
         </div>
       </div>
@@ -173,23 +173,23 @@ const ApplicationDetail: React.FC = () => {
   ].filter((f) => f.value);
 
   return (
-    <div className="min-h-screen bg-slate-950 py-8 px-4 sm:px-6">
+    <div className="min-h-screen bg-slate-50 py-8 px-4 sm:px-6">
       <div className="max-w-3xl mx-auto">
 
         {/* Success Banner */}
         {justCreated && (
-          <div className="bg-emerald-500/15 border border-emerald-500/30 rounded-2xl px-5 py-4 mb-6 animate-fade-in flex gap-3">
+          <div className="bg-emerald-50 border border-emerald-200 rounded-2xl px-5 py-4 mb-6 animate-fade-in flex gap-3">
             <span className="text-2xl">🎉</span>
             <div>
-              <p className="text-emerald-400 font-semibold">Application Submitted Successfully!</p>
-              <p className="text-emerald-300/70 text-sm">We'll notify you on status changes.</p>
+              <p className="text-emerald-700 font-semibold">Application Submitted Successfully!</p>
+              <p className="text-emerald-600 text-sm">We'll notify you on status changes.</p>
             </div>
           </div>
         )}
 
         {/* Real-time status update flash banner */}
         {lastUpdate && lastUpdate.applicationId === application._id && (
-          <div className="bg-blue-500/10 border border-blue-500/30 text-blue-400 px-4 py-3 rounded-xl flex items-center gap-3 mb-6 animate-pulse">
+          <div className="bg-blue-50 border border-blue-200 text-blue-700 px-4 py-3 rounded-xl flex items-center gap-3 mb-6 animate-pulse">
             <span className="text-xl">⚡</span>
             <p className="font-medium text-sm">Update: {lastUpdate.message}</p>
           </div>
@@ -197,26 +197,26 @@ const ApplicationDetail: React.FC = () => {
 
         {/* Breadcrumb */}
         <div className="flex items-center gap-2 mb-6 text-sm">
-          <Link to="/applications" className="text-slate-400 hover:text-white transition-colors">
+          <Link to="/applications" className="text-slate-500 hover:text-slate-800 transition-colors">
             ← My Applications
           </Link>
-          <span className="text-slate-600">/</span>
-          <span className="text-slate-300">{application.applicationNumber}</span>
+          <span className="text-slate-400">/</span>
+          <span className="text-slate-700">{application.applicationNumber}</span>
         </div>
 
         {/* Header Card */}
-        <div className="glass-card-dark p-6 mb-5">
+        <div className="bg-white p-6 mb-5 rounded-3xl shadow-sm border border-slate-200">
           <div className="flex flex-wrap items-start justify-between gap-4 mb-5">
             <div className="flex items-center gap-4">
-              <div className="w-14 h-14 rounded-2xl bg-gov-gradient flex items-center justify-center text-3xl flex-shrink-0">
+              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-100 to-teal-100 text-blue-600 flex items-center justify-center text-3xl flex-shrink-0">
                 {ct?.icon || '📋'}
               </div>
               <div>
-                <h1 className="text-xl font-bold text-white">{application.applicationNumber}</h1>
-                <p className="text-slate-400 text-sm capitalize mt-0.5">
+                <h1 className="text-xl font-bold text-slate-800">{application.applicationNumber}</h1>
+                <p className="text-slate-500 text-sm capitalize mt-0.5">
                   {application.certificateType} Certificate
                   {application.priority === 'urgent' && (
-                    <span className="ml-2 text-amber-400 font-medium">⚡ Urgent</span>
+                    <span className="ml-2 text-amber-600 font-medium">⚡ Urgent</span>
                   )}
                 </p>
               </div>
@@ -230,9 +230,9 @@ const ApplicationDetail: React.FC = () => {
               { label: 'Est. Completion', value: application.estimatedCompletionDate ? new Date(application.estimatedCompletionDate).toLocaleDateString('en-NP') : 'TBD' },
               { label: 'Documents', value: `${application.uploadedDocuments?.length || 0} file(s)` },
             ].map(({ label, value }) => (
-              <div key={label} className="bg-slate-800/50 rounded-xl p-3">
+              <div key={label} className="bg-slate-50 rounded-xl p-3">
                 <p className="text-slate-500 text-xs mb-1">{label}</p>
-                <p className="text-white text-sm font-medium">{value}</p>
+                <p className="text-slate-800 text-sm font-medium">{value}</p>
               </div>
             ))}
           </div>
@@ -240,8 +240,8 @@ const ApplicationDetail: React.FC = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 mb-5">
           {/* Timeline */}
-          <div className="glass-card-dark p-6">
-            <h2 className="text-base font-bold text-white mb-5">📊 Status Timeline</h2>
+          <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-200">
+            <h2 className="text-base font-bold text-slate-800 mb-5">📊 Status Timeline</h2>
             {timelineSteps.map((step, i) => (
               <TimelineStep
                 key={i}
@@ -252,16 +252,16 @@ const ApplicationDetail: React.FC = () => {
           </div>
 
           {/* Applicant Details */}
-          <div className="lg:col-span-2 glass-card-dark p-6">
-            <h2 className="text-base font-bold text-white mb-5">👤 Applicant Details</h2>
+          <div className="lg:col-span-2 bg-white p-6 rounded-3xl shadow-sm border border-slate-200">
+            <h2 className="text-base font-bold text-slate-800 mb-5">👤 Applicant Details</h2>
             {detailFields.length === 0 ? (
               <p className="text-slate-500 text-sm italic">No details provided</p>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {detailFields.map(({ label, value }) => (
-                  <div key={label} className="bg-slate-800/40 rounded-xl p-3">
+                  <div key={label} className="bg-slate-50 rounded-xl p-3 border border-slate-100">
                     <p className="text-slate-500 text-xs mb-0.5">{label}</p>
-                    <p className="text-white text-sm capitalize">{value}</p>
+                    <p className="text-slate-800 text-sm capitalize">{value}</p>
                   </div>
                 ))}
               </div>
@@ -271,8 +271,8 @@ const ApplicationDetail: React.FC = () => {
 
         {/* Uploaded Documents */}
         {(application.uploadedDocuments?.length ?? 0) > 0 && (
-          <div className="glass-card-dark p-6 mb-5">
-            <h2 className="text-base font-bold text-white mb-4">📎 Uploaded Documents</h2>
+          <div className="bg-white p-6 mb-5 rounded-3xl shadow-sm border border-slate-200">
+            <h2 className="text-base font-bold text-slate-800 mb-4">📎 Uploaded Documents</h2>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               {application.uploadedDocuments.map((doc, i) => (
                 <a
@@ -280,14 +280,14 @@ const ApplicationDetail: React.FC = () => {
                   href={doc.cloudinaryUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group block rounded-xl overflow-hidden border border-slate-700/40
-                             bg-slate-800/40 hover:border-primary-600/40 transition-all"
+                  className="group block rounded-xl overflow-hidden border border-slate-200
+                             bg-slate-50 hover:border-primary-300 transition-all"
                 >
-                  <div className="h-20 bg-slate-700 flex items-center justify-center text-3xl">
+                  <div className="h-20 bg-slate-100 flex items-center justify-center text-3xl">
                     {doc.cloudinaryUrl.includes('.pdf') ? '📄' : '🖼️'}
                   </div>
                   <div className="p-2.5">
-                    <p className="text-white text-xs font-medium truncate">{doc.documentType}</p>
+                    <p className="text-slate-800 text-xs font-medium truncate">{doc.documentType}</p>
                     <p className="text-slate-500 text-xs truncate">{doc.fileName}</p>
                   </div>
                 </a>
@@ -298,13 +298,13 @@ const ApplicationDetail: React.FC = () => {
 
         {/* Rejection Reason */}
         {isRejected && application.rejectionReason && (
-          <div className="bg-red-500/10 border border-red-500/30 rounded-2xl p-5 mb-5">
-            <h3 className="text-red-400 font-semibold mb-2 flex items-center gap-2">
+          <div className="bg-red-50 border border-red-200 rounded-2xl p-5 mb-5">
+            <h3 className="text-red-600 font-semibold mb-2 flex items-center gap-2">
               ❌ Rejection Reason
             </h3>
-            <p className="text-slate-300 text-sm">{application.rejectionReason}</p>
+            <p className="text-slate-600 text-sm">{application.rejectionReason}</p>
             {application.adminRemarks && (
-              <p className="text-slate-400 text-xs mt-2 border-t border-red-500/20 pt-2">
+              <p className="text-slate-500 text-xs mt-2 border-t border-red-200 pt-2">
                 Remarks: {application.adminRemarks}
               </p>
             )}
@@ -313,9 +313,9 @@ const ApplicationDetail: React.FC = () => {
 
         {/* Admin Remarks (non-rejected) */}
         {!isRejected && application.adminRemarks && (
-          <div className="bg-blue-500/10 border border-blue-500/30 rounded-2xl p-5 mb-5">
-            <h3 className="text-blue-400 font-semibold mb-2">💬 Admin Remarks</h3>
-            <p className="text-slate-300 text-sm">{application.adminRemarks}</p>
+          <div className="bg-blue-50 border border-blue-200 rounded-2xl p-5 mb-5">
+            <h3 className="text-blue-600 font-semibold mb-2">💬 Admin Remarks</h3>
+            <p className="text-slate-600 text-sm">{application.adminRemarks}</p>
           </div>
         )}
 

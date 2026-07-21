@@ -65,7 +65,7 @@ const Navbar: React.FC = () => {
   );
 
   return (
-    <nav className="bg-slate-900/95 backdrop-blur-md border-b border-slate-700/50 sticky top-0 z-50">
+    <nav className="bg-white/95 backdrop-blur-md border-b border-slate-200 sticky top-0 z-50 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
 
@@ -77,10 +77,10 @@ const Navbar: React.FC = () => {
               className="w-10 h-10 object-contain group-hover:scale-105 transition-transform" 
             />
             <div>
-              <div className="font-bold text-white text-sm leading-none font-nepali">
+              <div className="font-bold text-slate-800 text-sm leading-none font-nepali">
                 स्मार्ट सरकार
               </div>
-              <div className="text-xs text-slate-400 leading-none mt-0.5">
+              <div className="text-xs text-slate-500 leading-none mt-0.5">
                 Smart Gov Nepal
               </div>
             </div>
@@ -105,7 +105,7 @@ const Navbar: React.FC = () => {
                 <button
                   id="user-avatar-btn"
                   onClick={() => setDropdownOpen(!dropdownOpen)}
-                  className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl hover:bg-white/10
+                  className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl hover:bg-slate-100
                              transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-primary-500"
                 >
                   <div className="w-8 h-8 rounded-full bg-gov-gradient flex items-center justify-center
@@ -121,31 +121,30 @@ const Navbar: React.FC = () => {
                     )}
                   </div>
                   <div className="hidden sm:block text-left">
-                    <p className="text-sm font-medium text-white leading-none">{user.fullName.split(' ')[0]}</p>
-                    <p className="text-xs text-slate-400 leading-none mt-0.5 capitalize">{user.role}</p>
+                    <p className="text-sm font-medium text-slate-800 leading-none">{user.fullName.split(' ')[0]}</p>
+                    <p className="text-xs text-slate-500 leading-none mt-0.5 capitalize">{user.role}</p>
                   </div>
                   <svg
-                    className={`w-4 h-4 text-slate-400 transition-transform ${dropdownOpen ? 'rotate-180' : ''}`}
+                    className={`w-4 h-4 text-slate-500 transition-transform ${dropdownOpen ? 'rotate-180' : ''}`}
                     fill="none" viewBox="0 0 24 24" stroke="currentColor"
                   >
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                   </svg>
                 </button>
 
-                {/* Dropdown */}
                 {dropdownOpen && (
-                  <div className="absolute right-0 mt-2 w-52 glass-card-dark shadow-card-hover
+                  <div className="absolute right-0 mt-2 w-52 bg-white border border-slate-200 rounded-xl shadow-lg
                                   animate-slide-down overflow-hidden z-50">
-                    <div className="px-4 py-3 border-b border-slate-700/50">
-                      <p className="text-sm font-semibold text-white truncate">{user.fullName}</p>
-                      <p className="text-xs text-slate-400 truncate">{user.email}</p>
+                    <div className="px-4 py-3 border-b border-slate-100 bg-slate-50">
+                      <p className="text-sm font-semibold text-slate-800 truncate">{user.fullName}</p>
+                      <p className="text-xs text-slate-500 truncate">{user.email}</p>
                     </div>
                     <div className="py-1">
                       <Link
                         to="/profile"
                         onClick={() => setDropdownOpen(false)}
-                        className="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-300
-                                   hover:text-white hover:bg-white/10 transition-colors"
+                        className="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-600
+                                   hover:text-primary-700 hover:bg-slate-50 transition-colors"
                       >
                         <span>👤</span> Profile Settings
                       </Link>
@@ -153,16 +152,16 @@ const Navbar: React.FC = () => {
                         <Link
                           to="/applications"
                           onClick={() => setDropdownOpen(false)}
-                          className="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-300
-                                     hover:text-white hover:bg-white/10 transition-colors"
+                          className="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-600
+                                     hover:text-primary-700 hover:bg-slate-50 transition-colors"
                         >
                           <span>📋</span> My Applications
                         </Link>
                       )}
                       <button
                         onClick={handleLogout}
-                        className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-400
-                                   hover:text-red-300 hover:bg-red-500/10 transition-colors"
+                        className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-500
+                                   hover:text-red-700 hover:bg-red-50 transition-colors"
                       >
                         <span>🚪</span> Logout
                       </button>
@@ -198,7 +197,7 @@ const Navbar: React.FC = () => {
 
       {/* Mobile Menu */}
       {mobileOpen && (
-        <div className="md:hidden border-t border-slate-700/50 bg-slate-900 animate-slide-down">
+        <div className="md:hidden border-t border-slate-200 bg-white animate-slide-down shadow-md">
           <div className="px-4 py-3 flex flex-col gap-1">
             {isAuthenticated && user?.role === 'admin' && adminLinks}
             {isAuthenticated && user?.role === 'user' && userLinks}
@@ -212,8 +211,8 @@ const Navbar: React.FC = () => {
             {isAuthenticated && (
               <button
                 onClick={handleLogout}
-                className="text-left text-red-400 hover:text-red-300 font-medium text-sm px-3 py-2
-                           rounded-lg hover:bg-red-500/10 transition-colors mt-2"
+                className="text-left text-red-500 hover:text-red-700 font-medium text-sm px-3 py-2
+                           rounded-lg hover:bg-red-50 transition-colors mt-2"
               >
                 🚪 Logout
               </button>

@@ -8,7 +8,7 @@ const PrivateRoute: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-950">
+      <div className="min-h-screen flex items-center justify-center bg-slate-50">
         <Loader size="lg" text="Loading..." />
       </div>
     );

@@ -74,20 +74,20 @@ const Profile: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 py-8 px-4 sm:px-6">
+    <div className="min-h-screen bg-slate-50 py-8 px-4 sm:px-6">
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-white">👤 Profile Settings</h1>
-          <p className="text-slate-400 text-sm mt-1">Manage your account information</p>
+          <h1 className="text-3xl font-bold text-slate-800">👤 Profile Settings</h1>
+          <p className="text-slate-500 text-sm mt-1">Manage your account information</p>
         </div>
 
         {/* Status Message */}
         {message && (
           <div className={`flex items-center gap-3 rounded-xl px-4 py-3 mb-6 animate-fade-in border ${
             message.type === 'success'
-              ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
-              : 'bg-red-500/10 border-red-500/30 text-red-400'
+              ? 'bg-emerald-50 border-emerald-200 text-emerald-700'
+              : 'bg-red-50 border-red-200 text-red-600'
           }`}>
             <span>{message.type === 'success' ? '✅' : '⚠️'}</span>
             <p className="text-sm font-medium">{message.text}</p>
@@ -95,10 +95,10 @@ const Profile: React.FC = () => {
         )}
 
         {/* Avatar + Account Meta */}
-        <div className="glass-card-dark p-6 mb-5">
+        <div className="bg-white p-6 mb-5 rounded-3xl shadow-sm border border-slate-200">
           <div className="flex items-center gap-5">
-            <div className="w-20 h-20 rounded-2xl bg-gov-gradient flex items-center justify-center
-                            text-3xl font-bold text-white shadow-glow-blue flex-shrink-0">
+            <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-blue-100 to-teal-100 flex items-center justify-center
+                            text-3xl font-bold text-blue-600 shadow-sm flex-shrink-0">
               {user?.profilePhoto ? (
                 <img src={user.profilePhoto} alt={user.fullName} className="w-full h-full object-cover rounded-2xl" />
               ) : (
@@ -106,14 +106,14 @@ const Profile: React.FC = () => {
               )}
             </div>
             <div>
-              <h2 className="text-xl font-bold text-white">{user?.fullName}</h2>
-              <p className="text-slate-400 text-sm">{user?.email}</p>
+              <h2 className="text-xl font-bold text-slate-800">{user?.fullName}</h2>
+              <p className="text-slate-500 text-sm">{user?.email}</p>
               <div className="flex items-center gap-2 mt-2">
-                <span className="badge bg-primary-500/15 text-primary-400 border border-primary-500/30 capitalize">
+                <span className="badge bg-primary-50 text-primary-600 border border-primary-200 capitalize">
                   {user?.role}
                 </span>
                 {user?.isActive && (
-                  <span className="badge bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
+                  <span className="badge bg-emerald-50 text-emerald-600 border border-emerald-200">
                     Active
                   </span>
                 )}
@@ -123,9 +123,9 @@ const Profile: React.FC = () => {
         </div>
 
         {/* Profile Info */}
-        <div className="glass-card-dark p-6 mb-5">
+        <div className="bg-white p-6 mb-5 rounded-3xl shadow-sm border border-slate-200">
           <div className="flex items-center justify-between mb-5">
-            <h2 className="text-lg font-bold text-white">Personal Information</h2>
+            <h2 className="text-lg font-bold text-slate-800">Personal Information</h2>
             {!isEditing && (
               <button onClick={() => setIsEditing(true)} className="btn-ghost text-sm">
                 ✏️ Edit
@@ -194,9 +194,9 @@ const Profile: React.FC = () => {
                 { label: 'Address', value: user?.address || '—' },
                 { label: 'Member Since', value: user?.createdAt ? new Date(user.createdAt).toLocaleDateString('en-NP') : '—' },
               ].map(({ label, value }) => (
-                <div key={label} className="bg-slate-800/40 rounded-xl p-3">
+                <div key={label} className="bg-slate-50 border border-slate-100 rounded-xl p-3">
                   <p className="text-slate-500 text-xs mb-1">{label}</p>
-                  <p className="text-white text-sm truncate">{value}</p>
+                  <p className="text-slate-800 text-sm truncate">{value}</p>
                 </div>
               ))}
             </div>
@@ -204,9 +204,9 @@ const Profile: React.FC = () => {
         </div>
 
         {/* Change Password */}
-        <div className="glass-card-dark p-6">
+        <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-200">
           <div className="flex items-center justify-between mb-5">
-            <h2 className="text-lg font-bold text-white">🔑 Security</h2>
+            <h2 className="text-lg font-bold text-slate-800">🔑 Security</h2>
             {!isChangingPassword && (
               <button onClick={() => setIsChangingPassword(true)} className="btn-ghost text-sm">
                 Change Password
@@ -248,11 +248,11 @@ const Profile: React.FC = () => {
               </div>
             </form>
           ) : (
-            <div className="bg-slate-800/40 rounded-xl p-4 flex items-center gap-3">
+            <div className="bg-slate-50 border border-slate-100 rounded-xl p-4 flex items-center gap-3">
               <span className="text-2xl">🔐</span>
               <div>
-                <p className="text-white text-sm font-medium">Password Protected</p>
-                <p className="text-slate-400 text-xs">Your account is secured with a password</p>
+                <p className="text-slate-800 text-sm font-medium">Password Protected</p>
+                <p className="text-slate-500 text-xs">Your account is secured with a password</p>
               </div>
             </div>
           )}

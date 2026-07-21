@@ -49,13 +49,13 @@ export const SmartFormHelper: React.FC<SmartFormHelperProps> = ({
   };
 
   return (
-    <div className="bg-slate-900 border border-slate-700/50 rounded-xl overflow-hidden mt-6 mb-8 shadow-xl">
-      <div className="bg-gradient-to-r from-blue-900/40 to-purple-900/40 p-4 border-b border-slate-700/50 flex justify-between items-center">
+    <div className="bg-white border border-slate-200 rounded-xl overflow-hidden mt-6 mb-8 shadow-sm">
+      <div className="bg-gradient-to-r from-blue-50 to-purple-50 p-4 border-b border-slate-200 flex justify-between items-center">
         <div className="flex items-center gap-3">
           <span className="text-2xl">🤖</span>
           <div>
-            <h3 className="text-white font-bold text-sm">Smart Form Assistant</h3>
-            <p className="text-slate-400 text-xs">Verify your application before submitting</p>
+            <h3 className="text-slate-800 font-bold text-sm">Smart Form Assistant</h3>
+            <p className="text-slate-500 text-xs">Verify your application before submitting</p>
           </div>
         </div>
         <div className="flex gap-2">
@@ -84,13 +84,13 @@ export const SmartFormHelper: React.FC<SmartFormHelperProps> = ({
       </div>
 
       {isOpen && result && (
-        <div className="p-4 space-y-4 animate-fade-in bg-slate-950/50">
+        <div className="p-4 space-y-4 animate-fade-in bg-slate-50">
           
           {/* Status Banner */}
           <div className={`p-3 rounded-lg border flex items-center gap-3 ${
             result.isValid 
-              ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400' 
-              : 'bg-amber-500/10 border-amber-500/30 text-amber-400'
+              ? 'bg-emerald-50 border-emerald-200 text-emerald-700' 
+              : 'bg-amber-50 border-amber-200 text-amber-700'
           }`}>
             <span className="text-xl">{result.isValid ? '✅' : '⚠️'}</span>
             <span className="text-sm font-medium">
@@ -105,7 +105,7 @@ export const SmartFormHelper: React.FC<SmartFormHelperProps> = ({
             <div className="space-y-2">
               <h4 className="text-xs font-bold text-slate-500 uppercase">Errors</h4>
               {result.errors.map((err, i) => (
-                <div key={i} className="flex gap-2 text-sm text-red-400 bg-red-500/5 p-2 rounded">
+                <div key={i} className="flex gap-2 text-sm text-red-700 bg-red-50 p-2 rounded">
                   <span>❌</span> {err}
                 </div>
               ))}
@@ -117,7 +117,7 @@ export const SmartFormHelper: React.FC<SmartFormHelperProps> = ({
             <div className="space-y-2">
               <h4 className="text-xs font-bold text-slate-500 uppercase">Warnings</h4>
               {result.warnings.map((warn, i) => (
-                <div key={i} className="flex gap-2 text-sm text-amber-400 bg-amber-500/5 p-2 rounded">
+                <div key={i} className="flex gap-2 text-sm text-amber-700 bg-amber-50 p-2 rounded">
                   <span>⚠️</span> {warn}
                 </div>
               ))}
@@ -130,7 +130,7 @@ export const SmartFormHelper: React.FC<SmartFormHelperProps> = ({
               <h4 className="text-xs font-bold text-slate-500 uppercase">Document Readiness</h4>
               <span className="text-xs font-bold text-blue-400">{result.documentCompleteness.completionPercentage}%</span>
             </div>
-            <div className="w-full bg-slate-800 rounded-full h-2 mb-2">
+            <div className="w-full bg-slate-200 rounded-full h-2 mb-2">
               <div 
                 className={`h-2 rounded-full transition-all duration-1000 ${
                   result.documentCompleteness.completionPercentage === 100 ? 'bg-emerald-500' : 'bg-blue-500'
@@ -147,7 +147,7 @@ export const SmartFormHelper: React.FC<SmartFormHelperProps> = ({
 
           {/* Suggestions */}
           {result.smartSuggestions.length > 0 && (
-            <div className="space-y-2 pt-2 border-t border-slate-800">
+            <div className="space-y-2 pt-2 border-t border-slate-200">
               <h4 className="text-xs font-bold text-slate-500 uppercase flex items-center gap-1">
                 <span>💡</span> Smart Suggestions
               </h4>

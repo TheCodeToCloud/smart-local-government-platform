@@ -42,7 +42,7 @@ function App() {
       <AuthProvider>
         <ToastProvider>
           <ErrorBoundary>
-            <div className="min-h-screen bg-slate-950 flex flex-col">
+            <div className="min-h-screen bg-slate-50 flex flex-col">
               <Navbar />
               <main className="flex-1">
               <Routes>
@@ -74,11 +74,11 @@ function App() {
                 <Route
                   path="*"
                   element={
-                    <div className="min-h-screen flex items-center justify-center bg-slate-950">
+                    <div className="min-h-screen flex items-center justify-center bg-slate-50">
                       <div className="text-center animate-fade-in">
                         <p className="text-8xl mb-6">🇳🇵</p>
-                        <h1 className="text-6xl font-extrabold text-gradient mb-4">404</h1>
-                        <p className="text-slate-400 text-xl mb-8">Page not found</p>
+                        <h1 className="text-6xl font-extrabold text-slate-900 mb-4">404</h1>
+                        <p className="text-slate-600 text-xl mb-8">Page not found</p>
                         <a href="/" className="btn-primary py-3 px-8 inline-block">
                           ← Go to Home
                         </a>
