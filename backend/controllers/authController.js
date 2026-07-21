@@ -225,4 +225,31 @@ const changePassword = async (req, res, next) => {
   }
 };
 
-module.exports = { register, login, getMe, updateProfile, changePassword };
+// ─── @route  POST /api/auth/upload-photo ─────────────────────────────────────
+const uploadProfilePhoto = async (req, res, next) => {
+  try {
+    if (!req.file || !req.file.cloudinaryUrl) {
+      return res.status(400).json({ success: false, message: 'No photo uploaded.' });
+    }
+
+    const user = await User.findByIdAndUpdate(
+      req.user._id,
+      { $set: { profilePhoto: req.file.cloudinaryUrl } },
+      { new: true }
+    );
+
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found.' });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Profile photo updated successfully.',
+      data: { user },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = { register, login, getMe, updateProfile, changePassword, uploadProfilePhoto };

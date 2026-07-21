@@ -62,12 +62,13 @@ function App() {
                   <Route path="/profile"               element={<Profile />} />
                 </Route>
 
-                {/* ── Protected Admin ──────────────────────────────────────────── */}
+                {/* ── Protected Admin ────────────────────────────────────────────── */}
                 <Route element={<AdminRoute />}>
                   <Route path="/admin"                        element={<AdminDashboard />} />
                   <Route path="/admin/applications"           element={<AllApplications />} />
                   <Route path="/admin/applications/:id"       element={<AdminApplicationDetail />} />
                   <Route path="/admin/users"                  element={<ManageUsers />} />
+                  <Route path="/admin/profile"                element={<Profile />} />
                 </Route>
 
                 {/* ── 404 ─────────────────────────────────────────────────────── */}

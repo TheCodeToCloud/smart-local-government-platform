@@ -31,6 +31,7 @@ const Profile: React.FC = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [isChangingPwd, setIsChangingPwd] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
   const [msg, setMsg] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
   const [profileData, setProfileData] = useState({
@@ -101,12 +102,32 @@ const Profile: React.FC = () => {
     }
   };
 
-  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+
+    // Show preview immediately
     const reader = new FileReader();
     reader.onload = () => setAvatarPreview(reader.result as string);
     reader.readAsDataURL(file);
+
+    // Upload to server
+    setIsUploadingPhoto(true);
+    try {
+      const formData = new FormData();
+      formData.append('document', file);
+      const res = await authAPI.uploadPhoto(formData);
+      if (res.data.success && res.data.data?.user) {
+        updateUser(res.data.data.user);
+        showMsg('success', 'Profile photo updated successfully!');
+      }
+    } catch (err: any) {
+      showMsg('error', err?.response?.data?.message || 'Photo upload failed.');
+      // Revert preview on error
+      setAvatarPreview(user?.profilePhoto || '');
+    } finally {
+      setIsUploadingPhoto(false);
+    }
   };
 
   const initials = user?.fullName
@@ -144,8 +165,8 @@ const Profile: React.FC = () => {
             <div className="relative flex-shrink-0">
               <div
                 className="w-24 h-24 rounded-2xl overflow-hidden border-2 border-primary-200
-                            shadow-sm cursor-pointer group"
-                onClick={() => fileInputRef.current?.click()}
+                            shadow-sm cursor-pointer group relative"
+                onClick={() => !isUploadingPhoto && fileInputRef.current?.click()}
               >
                 {avatarPreview ? (
                   <img src={avatarPreview} alt={user?.fullName} className="w-full h-full object-cover" />
@@ -155,9 +176,19 @@ const Profile: React.FC = () => {
                     {initials}
                   </div>
                 )}
-                <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100
-                                transition-opacity flex items-center justify-center text-white text-xl">
-                  📷
+                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100
+                                transition-opacity flex flex-col items-center justify-center text-white text-xs gap-1">
+                  {isUploadingPhoto ? (
+                    <svg className="animate-spin w-6 h-6" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+                    </svg>
+                  ) : (
+                    <>
+                      <span className="text-2xl">📷</span>
+                      <span className="font-medium">Change</span>
+                    </>
+                  )}
                 </div>
               </div>
               <input

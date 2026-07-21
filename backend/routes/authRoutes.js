@@ -6,8 +6,10 @@ const {
   getMe,
   updateProfile,
   changePassword,
+  uploadProfilePhoto,
 } = require('../controllers/authController');
 const { protect } = require('../middleware/authMiddleware');
+const { uploadSingle } = require('../middleware/uploadMiddleware');
 const {
   registerValidation,
   loginValidation,
@@ -29,5 +31,8 @@ router.put('/update-profile', protect, updateProfileValidation, updateProfile);
 
 // @route   PUT /api/auth/change-password
 router.put('/change-password', protect, changePasswordValidation, changePassword);
+
+// @route   POST /api/auth/upload-photo
+router.post('/upload-photo', protect, uploadSingle, uploadProfilePhoto);
 
 module.exports = router;

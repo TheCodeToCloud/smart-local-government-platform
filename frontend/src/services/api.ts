@@ -58,6 +58,11 @@ export const authAPI = {
 
   changePassword: (data: { currentPassword: string; newPassword: string }) =>
     api.put<ApiResponse>('/auth/change-password', data),
+
+  uploadPhoto: (formData: FormData) =>
+    api.post<ApiResponse<{ user: User }>>('/auth/upload-photo', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    }),
 };
 
 // ─── Application API ──────────────────────────────────────────────────────────

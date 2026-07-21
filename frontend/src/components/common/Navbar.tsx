@@ -141,7 +141,7 @@ const Navbar: React.FC = () => {
                     </div>
                     <div className="py-1">
                       <Link
-                        to="/profile"
+                        to={user.role === 'admin' ? '/admin/profile' : '/profile'}
                         onClick={() => setDropdownOpen(false)}
                         className="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-600
                                    hover:text-primary-700 hover:bg-slate-50 transition-colors"
