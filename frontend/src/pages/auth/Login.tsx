@@ -76,12 +76,12 @@ const Login: React.FC = () => {
         <div className="relative z-10 flex flex-col justify-center px-16 text-white">
           <div className="mb-10">
             <div className="w-20 h-20 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20
-                            flex items-center justify-center text-5xl mb-6 shadow-glow-blue">
-              🇳🇵
+                            flex items-center justify-center p-3 mb-6 shadow-glow-blue">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/8/87/Emblem_of_Nepal.svg" alt="Nepal Emblem" className="w-full h-full object-contain drop-shadow-md" />
             </div>
             <h1 className="text-4xl font-bold mb-3 leading-tight">
               Smart Local<br />
-              <span className="text-gradient">Government Platform</span>
+              <span className="text-blue-200">Government Platform</span>
             </h1>
             <p className="text-blue-200 text-lg leading-relaxed">
               Nepal's digital gateway for government certificates and services. Fast, transparent, and secure.
@@ -112,8 +112,8 @@ const Login: React.FC = () => {
           {/* Header */}
           <div className="text-center mb-8">
             <div className="lg:hidden w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-600 to-teal-600 flex items-center justify-center
-                            text-4xl mx-auto mb-4 shadow-lg">
-              🇳🇵
+                            p-2 mx-auto mb-4 shadow-lg border border-white/20">
+              <img src="https://upload.wikimedia.org/wikipedia/commons/8/87/Emblem_of_Nepal.svg" alt="Nepal Emblem" className="w-full h-full object-contain" />
             </div>
             <h2 className="text-3xl font-bold text-slate-800 mb-2">Welcome Back</h2>
             <p className="text-slate-500 text-sm">
