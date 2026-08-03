@@ -4,6 +4,7 @@ import { ToastProvider } from './components/ui/Toast';
 import Navbar from './components/common/Navbar';
 import PrivateRoute from './components/common/PrivateRoute';
 import AdminRoute from './components/common/AdminRoute';
+import OfficerRoute from './components/common/OfficerRoute';
 import AssistantWidget from './components/smart/AssistantWidget';
 import ErrorBoundary from './components/common/ErrorBoundary';
 
@@ -35,6 +36,10 @@ import AdminDashboard from './pages/dashboard/AdminDashboard';
 import AllApplications from './pages/admin/AllApplications';
 import AdminApplicationDetail from './pages/admin/AdminApplicationDetail';
 import ManageUsers from './pages/admin/ManageUsers';
+
+// ── Protected Officer Pages ───────────────────────────────────────────────────
+import OfficerDashboard from './pages/officer/OfficerDashboard';
+import OfficerApplications from './pages/officer/OfficerApplications';
 
 function App() {
   return (
@@ -69,6 +74,13 @@ function App() {
                   <Route path="/admin/applications/:id"       element={<AdminApplicationDetail />} />
                   <Route path="/admin/users"                  element={<ManageUsers />} />
                   <Route path="/admin/profile"                element={<Profile />} />
+                </Route>
+
+                {/* ── Protected Officer ──────────────────────────────────────────── */}
+                <Route element={<OfficerRoute />}>
+                  <Route path="/officer"                      element={<OfficerDashboard />} />
+                  <Route path="/officer/applications"         element={<OfficerApplications />} />
+                  <Route path="/officer/profile"              element={<Profile />} />
                 </Route>
 
                 {/* ── 404 ─────────────────────────────────────────────────────── */}

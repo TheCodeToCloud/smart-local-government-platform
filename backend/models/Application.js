@@ -72,7 +72,7 @@ const applicationSchema = new mongoose.Schema(
     status: {
       type: String,
       enum: {
-        values: ['draft', 'pending', 'under_review', 'approved', 'rejected'],
+        values: ['draft', 'pending', 'under_review', 'returned_for_correction', 'verified', 'approved', 'rejected'],
         message: 'Invalid application status',
       },
       default: 'draft',
@@ -94,6 +94,15 @@ const applicationSchema = new mongoose.Schema(
       type: String,
       trim: true,
       maxlength: [1000, 'Rejection reason cannot exceed 1000 characters'],
+    },
+    verifiedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      default: null,
+    },
+    verifiedAt: {
+      type: Date,
+      default: null,
     },
     reviewedBy: {
       type: mongoose.Schema.Types.ObjectId,

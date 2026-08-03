@@ -71,4 +71,30 @@ const adminOnly = (req, res, next) => {
   next();
 };
 
-module.exports = { protect, adminOnly };
+const officerOnly = (req, res, next) => {
+  if (!req.user) {
+    return res.status(401).json({ success: false, message: 'Not authenticated.' });
+  }
+  if (req.user.role !== 'officer') {
+    return res.status(403).json({
+      success: false,
+      message: 'Access denied. Officer privileges required.',
+    });
+  }
+  next();
+};
+
+const officerOrAdmin = (req, res, next) => {
+  if (!req.user) {
+    return res.status(401).json({ success: false, message: 'Not authenticated.' });
+  }
+  if (req.user.role !== 'admin' && req.user.role !== 'officer') {
+    return res.status(403).json({
+      success: false,
+      message: 'Access denied. Elevated privileges required.',
+    });
+  }
+  next();
+};
+
+module.exports = { protect, adminOnly, officerOnly, officerOrAdmin };

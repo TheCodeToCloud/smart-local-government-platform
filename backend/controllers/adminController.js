@@ -114,10 +114,10 @@ const approveApplication = async (req, res, next) => {
       return res.status(404).json({ success: false, message: 'Application not found.' });
     }
 
-    if (!['pending', 'under_review'].includes(application.status)) {
+    if (application.status !== 'verified') {
       return res.status(400).json({
         success: false,
-        message: `Cannot approve application with status "${application.status}".`,
+        message: `Cannot approve application with status "${application.status}". Only verified applications can be approved.`,
       });
     }
 
@@ -178,7 +178,7 @@ const rejectApplication = async (req, res, next) => {
       return res.status(404).json({ success: false, message: 'Application not found.' });
     }
 
-    if (!['pending', 'under_review'].includes(application.status)) {
+    if (!['pending', 'under_review', 'verified'].includes(application.status)) {
       return res.status(400).json({
         success: false,
         message: `Cannot reject application with status "${application.status}".`,
