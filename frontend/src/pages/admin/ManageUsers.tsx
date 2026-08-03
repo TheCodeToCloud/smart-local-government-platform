@@ -70,6 +70,22 @@ const ManageUsers: React.FC = () => {
     }
   };
 
+  const handleChangeRole = async (userId: string, newRole: string) => {
+    setActionLoading(userId);
+    setToggleError(null);
+    try {
+      const res = await adminAPI.updateUserRole(userId, newRole);
+      if (res.data.success) {
+        setUsers(users.map(u => u._id === userId ? { ...u, role: newRole as any } : u));
+      }
+    } catch (error: any) {
+      console.error('Failed to update user role', error);
+      setToggleError(error?.response?.data?.message || 'Failed to update user role.');
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
   const totalPages = Math.ceil(total / limit);
 
   // Quick stats derived from current list (for the top cards)
@@ -248,11 +264,31 @@ const ManageUsers: React.FC = () => {
                           <td className="px-4 py-4 text-slate-500 text-xs">
                             {new Date(u.createdAt).toLocaleDateString('en-NP', { year: 'numeric', month: 'short', day: 'numeric' })}
                           </td>
-                          <td className="px-6 py-4 text-right">
+                          <td className="px-6 py-4 text-right flex items-center justify-end gap-2">
+                            {u.role === 'user' && !isSelf && (
+                              <button
+                                onClick={() => handleChangeRole(u._id, 'officer')}
+                                disabled={actionLoading === u._id}
+                                className="text-xs px-3 py-1.5 rounded-lg font-medium transition-colors border bg-blue-50 text-blue-600 border-blue-200 hover:bg-blue-500 hover:text-white"
+                                title="Promote to Officer"
+                              >
+                                Make Officer
+                              </button>
+                            )}
+                            {u.role === 'officer' && !isSelf && (
+                              <button
+                                onClick={() => handleChangeRole(u._id, 'user')}
+                                disabled={actionLoading === u._id}
+                                className="text-xs px-3 py-1.5 rounded-lg font-medium transition-colors border bg-orange-50 text-orange-600 border-orange-200 hover:bg-orange-500 hover:text-white"
+                                title="Demote to User"
+                              >
+                                Make User
+                              </button>
+                            )}
                             <button
                               onClick={() => handleToggleStatus(u._id)}
                               disabled={!canToggle || actionLoading === u._id}
-                              className={`text-xs px-3 py-1.5 rounded-lg font-medium transition-colors border flex items-center justify-center min-w-[90px] ml-auto ${
+                              className={`text-xs px-3 py-1.5 rounded-lg font-medium transition-colors border flex items-center justify-center min-w-[90px] ${
                                 !canToggle 
                                   ? 'bg-slate-100 text-slate-400 border-slate-200 cursor-not-allowed'
                                   : u.isActive

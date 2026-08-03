@@ -9,6 +9,7 @@ const {
   getDashboardStats,
   getAllUsers,
   toggleUserStatus,
+  updateUserRole,
 } = require('../controllers/adminController');
 const {
   rejectApplicationValidation,
@@ -27,5 +28,6 @@ router.put('/applications/:id/review', setUnderReview);
 
 router.get('/users', getAllUsers);
 router.put('/users/:id/toggle-status', toggleUserStatus);
+router.put('/users/:id/role', updateUserRole);
 
 module.exports = router;

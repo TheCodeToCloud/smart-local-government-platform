@@ -479,6 +479,39 @@ const toggleUserStatus = async (req, res, next) => {
     next(error);
   }
 };
+// ─── 8. PUT /admin/users/:id/role ─────────────────────────────────────────────
+const updateUserRole = async (req, res, next) => {
+  try {
+    const { role } = req.body;
+    if (!['user', 'officer', 'admin'].includes(role)) {
+      return res.status(400).json({ success: false, message: 'Invalid role.' });
+    }
+
+    const user = await User.findById(req.params.id).select('-password');
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found.' });
+    }
+
+    if (user._id.toString() === req.user._id.toString()) {
+      return res.status(400).json({
+        success: false,
+        message: 'Cannot change your own role.',
+      });
+    }
+
+    user.role = role;
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: `User role updated to ${role} successfully.`,
+      data: { user },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 
 module.exports = {
   getAllApplications,
@@ -488,4 +521,5 @@ module.exports = {
   getDashboardStats,
   getAllUsers,
   toggleUserStatus,
+  updateUserRole,
 };

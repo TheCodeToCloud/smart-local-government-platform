@@ -163,6 +163,12 @@ export const adminAPI = {
     api.put<ApiResponse<{ user: User }>>(
       `/admin/users/${id}/toggle-status`
     ),
+
+  updateUserRole: (id: string, role: string) =>
+    api.put<ApiResponse<{ user: User }>>(
+      `/admin/users/${id}/role`,
+      { role }
+    ),
 };
 
 // ─── Certificate API ──────────────────────────────────────────────────────────
