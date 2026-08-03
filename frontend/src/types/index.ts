@@ -15,7 +15,7 @@ export type ApplicationStatus =
   | 'approved'
   | 'rejected';
 
-export type UserRole = 'user' | 'admin';
+export type UserRole = 'user' | 'admin' | 'officer';
 
 // ─── User ─────────────────────────────────────────────────────────────────────
 export interface User {

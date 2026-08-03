@@ -20,7 +20,7 @@ const OfficerApplications: React.FC = () => {
         setApplications(res.data.data);
       }
     } catch (error) {
-      showToast('error', 'Failed to load applications');
+      showToast('Failed to load applications', 'error');
     } finally {
       setLoading(false);
     }
@@ -31,11 +31,11 @@ const OfficerApplications: React.FC = () => {
       setVerifyingId(id);
       const res = await axios.put(`/api/officer/applications/${id}/verify`, {}, { withCredentials: true });
       if (res.data.success) {
-        showToast('success', 'Application verified and forwarded to Admin.');
+        showToast('Application verified and forwarded to Admin.', 'success');
         fetchApplications();
       }
     } catch (error: any) {
-      showToast('error', error.response?.data?.message || 'Failed to verify');
+      showToast(error.response?.data?.message || 'Failed to verify', 'error');
     } finally {
       setVerifyingId(null);
     }
@@ -49,11 +49,11 @@ const OfficerApplications: React.FC = () => {
       setVerifyingId(id);
       const res = await axios.put(`/api/officer/applications/${id}/return`, { reason }, { withCredentials: true });
       if (res.data.success) {
-        showToast('success', 'Application returned for correction.');
+        showToast('Application returned for correction.', 'success');
         fetchApplications();
       }
     } catch (error: any) {
-      showToast('error', error.response?.data?.message || 'Failed to return');
+      showToast(error.response?.data?.message || 'Failed to return', 'error');
     } finally {
       setVerifyingId(null);
     }
