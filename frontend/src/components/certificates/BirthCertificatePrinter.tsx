@@ -44,6 +44,19 @@ const BirthCertificatePrinter: React.FC<Props> = ({ cert, onClose }) => {
     }
   };
 
+  const handlePrint = async () => {
+    // 1. Trigger the print dialog
+    reactToPrintFn();
+
+    // 2. Record the print in the backend (if not already recorded)
+    try {
+      const { certificateAPI } = await import('../../services/api');
+      await certificateAPI.recordPrint(cert._id);
+    } catch (e) {
+      console.error('Failed to record print', e);
+    }
+  };
+
   return (
     <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[100] flex flex-col items-center justify-center p-4">
       {/* Top Bar */}
@@ -55,7 +68,7 @@ const BirthCertificatePrinter: React.FC<Props> = ({ cert, onClose }) => {
         ) : (
           <>
             <button 
-              onClick={() => reactToPrintFn()} 
+              onClick={handlePrint} 
               className="btn-primary py-2 px-6 flex items-center gap-2 text-sm"
             >
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -93,6 +106,7 @@ const BirthCertificatePrinter: React.FC<Props> = ({ cert, onClose }) => {
               signatoryName="Ram Prasad Sharma"
               designation="Ward Chairperson"
               office={`${appData.applicantDetails?.municipalityName || ''} Ward No ${appData.applicantDetails?.wardNumber || '1'}`}
+              downloadCount={cert.downloadCount || 0}
             />
           </div>
         </div>

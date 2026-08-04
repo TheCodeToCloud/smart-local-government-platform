@@ -208,6 +208,15 @@ const AdminApplicationDetail: React.FC = () => {
                 <span className="text-slate-800 font-medium">{application.certificateType} Certificate</span>
                 <span className="text-slate-300">•</span>
                 Applied on {new Date(application.createdAt).toLocaleDateString('en-NP')}
+                
+                {application.status === 'approved' && certificate && (
+                  <>
+                    <span className="text-slate-300">•</span>
+                    <span className={`font-medium ${certificate.downloadCount > 0 ? 'text-red-500' : 'text-emerald-600'}`}>
+                      {certificate.downloadCount > 0 ? `Printed: ${certificate.downloadCount} Times (Copy)` : 'Original Ready to Print'}
+                    </span>
+                  </>
+                )}
               </p>
             </div>
 

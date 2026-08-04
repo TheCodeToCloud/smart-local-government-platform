@@ -188,6 +188,9 @@ export const certificateAPI = {
     api.get<ApiResponse<{ certificateNumber?: string; holderName?: string; certificateType?: string; issuedDate?: string; expiryDate?: string; isValid: boolean; message?: string; revokedReason?: string }>>(
       `/certificates/verify/${certNumber}`
     ),
+
+  recordPrint: (id: string) =>
+    api.post<ApiResponse>(`/certificates/${id}/record-print`),
 };
 
 // ─── Notification API ─────────────────────────────────────────────────────────

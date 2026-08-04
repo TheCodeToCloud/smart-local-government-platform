@@ -20,6 +20,7 @@ export interface BirthCertificateProps {
   signatoryName: string;
   designation: string;
   office: string;
+  downloadCount?: number;
 }
 
 const BirthCertificate: React.FC<BirthCertificateProps> = ({
@@ -42,7 +43,10 @@ const BirthCertificate: React.FC<BirthCertificateProps> = ({
   signatoryName,
   designation,
   office,
+  downloadCount = 0,
 }) => {
+  const isCopy = downloadCount > 0;
+
   return (
     <div className="w-[210mm] min-h-[297mm] mx-auto bg-[#faf8f5] relative overflow-hidden font-nepali text-black p-4 box-border shadow-2xl print:shadow-none print:w-[210mm] print:h-[297mm] print:p-0 print:overflow-hidden">
       <style type="text/css" media="print">
@@ -58,6 +62,15 @@ const BirthCertificate: React.FC<BirthCertificateProps> = ({
           SAMPLE DEMO
         </h1>
       </div>
+
+      {/* --- COPY Watermark --- */}
+      {isCopy && (
+        <div className="absolute inset-0 pointer-events-none flex items-center justify-center z-20 opacity-20">
+          <h1 className="text-[140px] font-bold font-nepali text-red-600 -rotate-45 tracking-widest whitespace-nowrap outline-4 outline-white">
+            प्रतिलिपि (COPY)
+          </h1>
+        </div>
+      )}
       
       {/* --- Outer Decorative Border --- */}
       <div className="w-full h-full border-[12px] border-double border-[#c0374a] p-2 relative z-10 box-border">

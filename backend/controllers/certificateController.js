@@ -112,8 +112,35 @@ const verifyCertificate = async (req, res, next) => {
   }
 };
 
+// ─── 4. POST /api/certificates/:id/record-print ───────────────────────────────
+const recordPrint = async (req, res, next) => {
+  try {
+    const certificate = await Certificate.findById(req.params.id);
+
+    if (!certificate) {
+      return res.status(404).json({ success: false, message: 'Certificate not found.' });
+    }
+
+    // Admins, officers, or the owner can print
+    if (certificate.userId.toString() !== req.user._id.toString() && req.user.role === 'citizen') {
+      return res.status(403).json({ success: false, message: 'Access denied.' });
+    }
+
+    certificate.downloadCount = (certificate.downloadCount || 0) + 1;
+    await certificate.save();
+
+    res.status(200).json({ 
+      success: true, 
+      data: { downloadCount: certificate.downloadCount }
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   getUserCertificates,
   downloadCertificate,
   verifyCertificate,
+  recordPrint,
 };
