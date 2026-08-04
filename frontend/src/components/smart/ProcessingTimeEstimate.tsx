@@ -45,7 +45,7 @@ export const ProcessingTimeEstimate: React.FC<ProcessingTimeEstimateProps> = ({
       })
       .finally(() => setIsLoading(false));
 
-  }, [certificateType, priority, onUpgradeToUrgent]);
+  }, [certificateType, priority]);
 
   if (!certificateType) return null;
 
