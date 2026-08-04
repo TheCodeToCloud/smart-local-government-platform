@@ -44,7 +44,13 @@ const BirthCertificate: React.FC<BirthCertificateProps> = ({
   office,
 }) => {
   return (
-    <div className="w-[210mm] min-h-[297mm] mx-auto bg-[#faf8f5] relative overflow-hidden font-nepali text-black p-4 box-border shadow-2xl print:shadow-none print:w-full print:h-full print:p-0">
+    <div className="w-[210mm] min-h-[297mm] mx-auto bg-[#faf8f5] relative overflow-hidden font-nepali text-black p-4 box-border shadow-2xl print:shadow-none print:w-[210mm] print:h-[297mm] print:p-0 print:overflow-hidden">
+      <style type="text/css" media="print">
+        {`
+          @page { size: A4; margin: 0; }
+          html, body { margin: 0; padding: 0; }
+        `}
+      </style>
       
       {/* --- Watermark --- */}
       <div className="absolute inset-0 pointer-events-none flex items-center justify-center z-0 opacity-[0.03]">
