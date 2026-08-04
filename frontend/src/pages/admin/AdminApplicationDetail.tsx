@@ -121,6 +121,19 @@ const AdminApplicationDetail: React.FC = () => {
     }));
   };
 
+  const handleViewPdf = async () => {
+    if (!certificate?._id) return;
+    try {
+      showMsg('success', 'Loading PDF...');
+      const { certificateAPI } = await import('../../services/api');
+      const res = await certificateAPI.download(certificate._id);
+      const url = window.URL.createObjectURL(new Blob([res.data], { type: 'application/pdf' }));
+      window.open(url, '_blank');
+    } catch (err) {
+      showMsg('error', 'Failed to load PDF.');
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-50">
@@ -234,17 +247,15 @@ const AdminApplicationDetail: React.FC = () => {
               </div>
             )}
             
-            {application.status === 'approved' && certificate?.pdfUrl && (
+            {application.status === 'approved' && certificate && (
               <div className="flex items-center gap-3">
-                <a 
-                  href={certificate.pdfUrl} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
+                <button 
+                  onClick={handleViewPdf}
                   className="btn-primary text-sm py-2 bg-indigo-600 hover:bg-indigo-500 shadow-indigo-500/20 flex items-center gap-2"
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 01.293.707V19a2 01-2 2z" /></svg>
                   View PDF Certificate
-                </a>
+                </button>
               </div>
             )}
           </div>

@@ -484,7 +484,7 @@ const generateCertificate = async (application) => {
     let qrCodeUrl = null;
     try {
       const pdfUpload = await uploadToCloudinary(pdfBuffer, {
-        resource_type: 'raw', folder: 'smartgov/certificates', public_id: certificateNumber, format: 'pdf',
+        resource_type: 'image', folder: 'smartgov/certificates', public_id: certificateNumber, format: 'pdf',
       });
       pdfUrl = pdfUpload.secure_url;
     } catch (uploadErr) {
