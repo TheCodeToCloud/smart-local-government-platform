@@ -68,6 +68,8 @@ export const STATUS_COLORS: Record<ApplicationStatus | 'valid' | 'expired', stri
   under_review: 'bg-blue-100 text-blue-800',
   approved: 'bg-green-100 text-green-800',
   rejected: 'bg-red-100 text-red-800',
+  verified: 'bg-teal-100 text-teal-800',
+  returned_for_correction: 'bg-orange-100 text-orange-800',
   valid: 'bg-green-100 text-green-800',
   expired: 'bg-red-100 text-red-800',
 };

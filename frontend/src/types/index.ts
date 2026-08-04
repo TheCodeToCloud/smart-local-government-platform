@@ -12,6 +12,8 @@ export type ApplicationStatus =
   | 'draft'
   | 'pending'
   | 'under_review'
+  | 'verified'
+  | 'returned_for_correction'
   | 'approved'
   | 'rejected';
 

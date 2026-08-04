@@ -35,6 +35,16 @@ const statusConfig: Record<StatusType, { label: string; classes: string; dot: st
     classes: 'bg-red-500/15 text-red-400 border border-red-500/30',
     dot: 'bg-red-400',
   },
+  verified: {
+    label: 'Verified',
+    classes: 'bg-teal-500/15 text-teal-400 border border-teal-500/30',
+    dot: 'bg-teal-400',
+  },
+  returned_for_correction: {
+    label: 'Returned for Correction',
+    classes: 'bg-orange-500/15 text-orange-400 border border-orange-500/30',
+    dot: 'bg-orange-400',
+  },
   valid: {
     label: 'Valid',
     classes: 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30',
