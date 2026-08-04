@@ -451,30 +451,11 @@ const OfficerApplicationDetail: React.FC = () => {
               </div>
             )}
 
-            {/* Admin Notes Box (editable if pending) */}
-            {canAct && (
-              <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-200">
-                <h2 className="text-sm font-bold text-slate-500 uppercase tracking-wider mb-4">Internal Notes</h2>
-                <textarea
-                  value={remarks}
-                  onChange={e => setRemarks(e.target.value)}
-                  placeholder="Add private remarks about this application..."
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-sm text-slate-700 focus:border-primary-500 focus:ring-1 focus:ring-primary-500 outline-none resize-none h-32"
-                />
-                <p className="text-[10px] text-slate-500 mt-2">These notes will be saved when you Approve or Reject the application.</p>
-              </div>
-            )}
-
           </div>
         </div>
       </div>
+    </div>
+  );
+};
 
-      {/* 4. Reject Modal */}
-      {showRejectModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fade-in">
-          <div className="bg-white border border-slate-200 rounded-2xl w-full max-w-md overflow-hidden shadow-2xl">
-            <div className="bg-red-50 p-4 border-b border-red-200">
-              <h3 className="text-xl font-bold text-red-600 flex items-center gap-2">
-                <span>❌</span> Reject Application
-              </h3>
 export default OfficerApplicationDetail;
