@@ -23,6 +23,11 @@ const PrivateRoute: React.FC = () => {
     return <Navigate to="/admin" replace />;
   }
 
+  // Officer users should not access user-only pages
+  if (user?.role === 'officer') {
+    return <Navigate to="/officer" replace />;
+  }
+
   return <Outlet />;
 };
 

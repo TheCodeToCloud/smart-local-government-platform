@@ -10,6 +10,10 @@ const {
 router.use(protect);
 router.use(officerOnly);
 
+// @route   GET /api/officer/stats
+// @desc    Get dashboard stats for officer
+router.get('/stats', require('../controllers/officerController').getOfficerStats);
+
 // @route   GET /api/officer/applications
 // @desc    Get all pending applications for officer review
 router.get('/applications', getPendingApplications);

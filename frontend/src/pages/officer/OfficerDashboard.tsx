@@ -1,76 +1,136 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios';
+import { officerAPI } from '../../services/api';
 import { useAuth } from '../../hooks/useAuth';
 import Loader from '../../components/common/Loader';
+import type { Application } from '../../types';
 
 const OfficerDashboard: React.FC = () => {
   const { user } = useAuth();
   const [stats, setStats] = useState({ pending: 0, verified: 0, returned: 0 });
+  const [recentApps, setRecentApps] = useState<Application[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchStats = async () => {
+    const fetchDashboardData = async () => {
       try {
-        const response = await axios.get('/api/officer/applications', {
-          withCredentials: true,
-        });
-        if (response.data.success) {
-          setStats({
-            pending: response.data.count,
-            verified: 0, // Mock stats for now
-            returned: 0,
-          });
+        const [statsRes, appsRes] = await Promise.all([
+          officerAPI.getStats(),
+          officerAPI.getApplications()
+        ]);
+        
+        if (statsRes.data.success) {
+          setStats(statsRes.data.data as any);
+        }
+        
+        if (appsRes.data.success && appsRes.data.data) {
+          // Just take the top 5 most recent pending applications
+          setRecentApps(appsRes.data.data.slice(0, 5) as any);
         }
       } catch (error) {
-        console.error('Error fetching officer stats:', error);
+        console.error('Error fetching officer dashboard data:', error);
       } finally {
         setLoading(false);
       }
     };
-    fetchStats();
+    fetchDashboardData();
   }, []);
 
   if (loading) return <div className="p-8"><Loader /></div>;
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fade-in">
-      <h1 className="text-3xl font-bold text-slate-800 mb-2">Officer Dashboard</h1>
-      <p className="text-slate-600 mb-8">Welcome back, {user?.fullName}. Here's your verification queue.</p>
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
+        <div>
+          <h1 className="text-3xl font-bold text-slate-800">Officer Dashboard</h1>
+          <p className="text-slate-500 mt-1">Welcome back, {user?.fullName}. Here is your verification queue.</p>
+        </div>
+        <Link
+          to="/officer/applications"
+          className="btn-primary py-2 px-6 flex items-center gap-2 rounded-xl whitespace-nowrap"
+        >
+          <span>📋</span> Go to Review Queue
+        </Link>
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
-          <p className="text-sm font-medium text-slate-500 mb-1">Applications to Verify</p>
-          <p className="text-3xl font-bold text-slate-800">{stats.pending}</p>
+        <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-200 hover:shadow-md transition-shadow relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-24 h-24 bg-amber-500/10 rounded-bl-full -z-10"></div>
+          <p className="text-sm font-bold text-slate-500 uppercase tracking-wider mb-1">To Verify</p>
+          <p className="text-4xl font-extrabold text-amber-600">{stats.pending}</p>
+          <p className="text-xs text-slate-400 mt-2">Applications waiting for your review</p>
         </div>
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
-          <p className="text-sm font-medium text-slate-500 mb-1">Applications Verified</p>
-          <p className="text-3xl font-bold text-primary-600">{stats.verified}</p>
+        <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-200 hover:shadow-md transition-shadow relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-24 h-24 bg-emerald-500/10 rounded-bl-full -z-10"></div>
+          <p className="text-sm font-bold text-slate-500 uppercase tracking-wider mb-1">Verified</p>
+          <p className="text-4xl font-extrabold text-emerald-600">{stats.verified}</p>
+          <p className="text-xs text-slate-400 mt-2">Applications verified by you</p>
         </div>
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
-          <p className="text-sm font-medium text-slate-500 mb-1">Returned for Correction</p>
-          <p className="text-3xl font-bold text-red-500">{stats.returned}</p>
+        <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-200 hover:shadow-md transition-shadow relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-24 h-24 bg-red-500/10 rounded-bl-full -z-10"></div>
+          <p className="text-sm font-bold text-slate-500 uppercase tracking-wider mb-1">Returned</p>
+          <p className="text-4xl font-extrabold text-red-500">{stats.returned}</p>
+          <p className="text-xs text-slate-400 mt-2">Sent back for correction</p>
         </div>
       </div>
 
-      <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-xl font-bold text-slate-800">Quick Actions</h2>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <Link
-            to="/officer/applications"
-            className="flex items-center justify-center gap-2 bg-primary-50 text-primary-700 font-medium p-4 rounded-xl hover:bg-primary-100 transition-colors"
-          >
-            📋 Review Applications
-          </Link>
-          <Link
-            to="/officer/profile"
-            className="flex items-center justify-center gap-2 bg-slate-50 text-slate-700 font-medium p-4 rounded-xl hover:bg-slate-100 transition-colors"
-          >
-            👤 Update Profile
+      <div className="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
+        <div className="p-6 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+          <h2 className="text-lg font-bold text-slate-800">Recent Pending Applications</h2>
+          <Link to="/officer/applications" className="text-sm font-medium text-primary-600 hover:text-primary-700">
+            View all →
           </Link>
         </div>
+        
+        {recentApps.length === 0 ? (
+          <div className="p-12 text-center">
+            <div className="w-16 h-16 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-4">
+              <span className="text-2xl">🎉</span>
+            </div>
+            <h3 className="text-slate-800 font-bold mb-1">All caught up!</h3>
+            <p className="text-slate-500 text-sm">There are no pending applications to verify right now.</p>
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-left border-collapse">
+              <thead>
+                <tr className="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider border-b border-slate-200">
+                  <th className="p-4 font-semibold">App Number</th>
+                  <th className="p-4 font-semibold">Type</th>
+                  <th className="p-4 font-semibold">Applicant</th>
+                  <th className="p-4 font-semibold">Date Submitted</th>
+                  <th className="p-4 font-semibold text-right">Action</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100 text-sm">
+                {recentApps.map((app) => (
+                  <tr key={app._id} className="hover:bg-slate-50/80 transition-colors">
+                    <td className="p-4 font-medium text-slate-800">{app.applicationNumber}</td>
+                    <td className="p-4 capitalize">
+                      <span className="bg-blue-50 text-blue-700 px-2.5 py-1 rounded-md text-xs font-semibold">
+                        {app.certificateType}
+                      </span>
+                    </td>
+                    <td className="p-4">
+                      {app.applicantDetails?.fullName || 'N/A'}
+                    </td>
+                    <td className="p-4 text-slate-500">
+                      {new Date(app.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                    </td>
+                    <td className="p-4 text-right">
+                      <Link
+                        to={`/officer/applications`} // Ideally links to the specific detail, assuming /officer/applications handles it
+                        className="text-primary-600 font-medium hover:text-primary-800 text-sm bg-primary-50 px-3 py-1.5 rounded-lg"
+                      >
+                        Review
+                      </Link>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
     </div>
   );

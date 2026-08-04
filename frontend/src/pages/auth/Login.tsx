@@ -5,7 +5,7 @@ import { AxiosError } from 'axios';
 import type { ApiResponse } from '../../types';
 
 const Login: React.FC = () => {
-  const { login, isAuthenticated } = useAuth();
+  const { login, isAuthenticated, user } = useAuth();
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({ email: '', password: '' });
@@ -14,10 +14,14 @@ const Login: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
-  // Redirect if already logged in
+  // Redirect if already logged in based on role
   useEffect(() => {
-    if (isAuthenticated) navigate('/dashboard', { replace: true });
-  }, [isAuthenticated, navigate]);
+    if (isAuthenticated && user) {
+      if (user.role === 'admin') navigate('/admin', { replace: true });
+      else if (user.role === 'officer') navigate('/officer', { replace: true });
+      else navigate('/dashboard', { replace: true });
+    }
+  }, [isAuthenticated, user, navigate]);
 
   // Restore remembered email
   useEffect(() => {
@@ -51,7 +55,7 @@ const Login: React.FC = () => {
       }
 
       await login(formData.email, formData.password);
-      navigate('/dashboard', { replace: true });
+      // Navigation will be handled by the useEffect above once user state is populated
     } catch (err) {
       const axiosErr = err as AxiosError<ApiResponse>;
       setError(

@@ -211,4 +211,12 @@ export const assistantAPI = {
     }>>('/assistant/guide', { query }),
 };
 
+// ─── Officer API ──────────────────────────────────────────────────────────────
+export const officerAPI = {
+  getStats: () =>
+    api.get<ApiResponse<{ pending: number; verified: number; returned: number; }>>('/officer/stats'),
+  getApplications: () =>
+    api.get<ApiResponse<{ count: number; data: import('../types').Application[] }>>('/officer/applications'),
+};
+
 export default api;

@@ -103,3 +103,36 @@ exports.returnApplicationForCorrection = async (req, res, next) => {
     next(error);
   }
 };
+
+// @desc    Get dashboard stats for officer
+// @route   GET /api/officer/stats
+// @access  Private/Officer
+exports.getOfficerStats = async (req, res, next) => {
+  try {
+    const pendingCount = await Application.countDocuments({
+      status: { $in: ['pending', 'under_review'] }
+    });
+
+    const verifiedCount = await Application.countDocuments({
+      status: 'verified',
+      verifiedBy: req.user._id
+    });
+
+    const returnedCount = await Application.countDocuments({
+      status: 'returned_for_correction'
+      // Ideally we would track returnedBy but since we don't have it explicitly, we can just show total returned, or assume the officer is checking the system's global returns.
+      // We will just show total returned applications for now.
+    });
+
+    res.status(200).json({
+      success: true,
+      data: {
+        pending: pendingCount,
+        verified: verifiedCount,
+        returned: returnedCount
+      }
+    });
+  } catch (error) {
+    next(error);
+  }
+};

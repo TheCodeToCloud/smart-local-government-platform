@@ -32,7 +32,7 @@ const getPasswordStrength = (password: string): { level: 0 | 1 | 2 | 3; label: s
 };
 
 const Register: React.FC = () => {
-  const { register, isAuthenticated } = useAuth();
+  const { register, isAuthenticated, user } = useAuth();
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState<FormData>({
@@ -51,8 +51,12 @@ const Register: React.FC = () => {
   const [apiError, setApiError] = useState('');
 
   useEffect(() => {
-    if (isAuthenticated) navigate('/dashboard', { replace: true });
-  }, [isAuthenticated, navigate]);
+    if (isAuthenticated && user) {
+      if (user.role === 'admin') navigate('/admin', { replace: true });
+      else if (user.role === 'officer') navigate('/officer', { replace: true });
+      else navigate('/dashboard', { replace: true });
+    }
+  }, [isAuthenticated, user, navigate]);
 
   const passwordStrength = getPasswordStrength(formData.password);
 
@@ -109,14 +113,15 @@ const Register: React.FC = () => {
     setApiError('');
 
     try {
-      await register({
+      const payload = {
         fullName: formData.fullName.trim(),
         email: formData.email.trim(),
         password: formData.password,
         phone: formData.phone,
         address: formData.address.trim(),
-      });
-      navigate('/dashboard', { replace: true });
+      };
+      await register(payload);
+      // Navigation is handled by the useEffect above
     } catch (err) {
       const axiosErr = err as AxiosError<ApiResponse>;
       setApiError(
