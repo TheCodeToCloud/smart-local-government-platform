@@ -41,6 +41,7 @@ import ManageUsers from './pages/admin/ManageUsers';
 import OfficerDashboard from './pages/officer/OfficerDashboard';
 import OfficerApplications from './pages/officer/OfficerApplications';
 import OfficerApplicationDetail from './pages/officer/OfficerApplicationDetail';
+import OfficerDuplicateRequests from './pages/officer/OfficerDuplicateRequests';
 
 function App() {
   return (
@@ -82,6 +83,7 @@ function App() {
                   <Route path="/officer"                      element={<OfficerDashboard />} />
                   <Route path="/officer/applications"         element={<OfficerApplications />} />
                   <Route path="/officer/applications/:id"     element={<OfficerApplicationDetail />} />
+                  <Route path="/officer/duplicate-requests"   element={<OfficerDuplicateRequests />} />
                   <Route path="/officer/profile"              element={<Profile />} />
                 </Route>
 

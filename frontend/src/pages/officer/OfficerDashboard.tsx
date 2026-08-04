@@ -45,12 +45,20 @@ const OfficerDashboard: React.FC = () => {
           <h1 className="text-3xl font-bold text-slate-800">Officer Dashboard</h1>
           <p className="text-slate-500 mt-1">Welcome back, {user?.fullName}. Here is your verification queue.</p>
         </div>
-        <Link
-          to="/officer/applications"
-          className="btn-primary py-2 px-6 flex items-center gap-2 rounded-xl whitespace-nowrap"
-        >
-          <span>📋</span> Go to Review Queue
-        </Link>
+        <div className="flex flex-col sm:flex-row gap-3">
+          <Link
+            to="/officer/duplicate-requests"
+            className="btn-outline border-amber-200 text-amber-700 bg-amber-50 hover:bg-amber-100 py-2 px-6 flex items-center gap-2 rounded-xl whitespace-nowrap"
+          >
+            <span>⚠️</span> Duplicate Requests
+          </Link>
+          <Link
+            to="/officer/applications"
+            className="btn-primary py-2 px-6 flex items-center gap-2 rounded-xl whitespace-nowrap"
+          >
+            <span>📋</span> Go to Review Queue
+          </Link>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">

@@ -181,6 +181,9 @@ export const certificateAPI = {
   getAll: () =>
     api.get<ApiResponse<{ certificates: Certificate[] }>>('/certificates'),
 
+  getDuplicateRequests: () =>
+    api.get<ApiResponse<{ requests: Certificate[] }>>('/certificates/duplicate-requests'),
+
   download: (id: string) =>
     api.get<Blob>(`/certificates/${id}/download`, { responseType: 'blob' }),
 

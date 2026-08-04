@@ -3,6 +3,7 @@ const router = express.Router();
 const { protect } = require('../middleware/authMiddleware');
 const {
   getUserCertificates,
+  getDuplicateRequests,
   downloadCertificate,
   verifyCertificate,
   recordPrint,
@@ -17,6 +18,7 @@ router.get('/verify/:certNumber', verifyCertificate);
 // Protected routes
 router.use(protect);
 router.get('/', getUserCertificates);
+router.get('/duplicate-requests', getDuplicateRequests);
 router.get('/:id/download', downloadCertificate);
 router.post('/:id/record-print', recordPrint);
 router.post('/:id/request-duplicate', requestDuplicate);

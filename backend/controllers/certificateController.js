@@ -13,6 +13,24 @@ const getUserCertificates = async (req, res, next) => {
   }
 };
 
+// ─── 1.5 GET /api/certificates/duplicate-requests (Admin/Officer) ──────────────
+const getDuplicateRequests = async (req, res, next) => {
+  try {
+    if (!['admin', 'officer'].includes(req.user.role)) {
+      return res.status(403).json({ success: false, message: 'Access denied.' });
+    }
+
+    const requests = await Certificate.find({ duplicateRequestStatus: 'pending' })
+      .sort({ duplicateRequestDate: -1 })
+      .populate('userId', 'fullName email')
+      .populate('applicationId', 'applicationNumber certificateType applicantDetails');
+
+    res.status(200).json({ success: true, data: { requests } });
+  } catch (error) {
+    next(error);
+  }
+};
+
 // ─── 2. GET /api/certificates/:id/download ────────────────────────────────────
 const downloadCertificate = async (req, res, next) => {
   try {
@@ -218,6 +236,7 @@ const rejectDuplicate = async (req, res, next) => {
 
 module.exports = {
   getUserCertificates,
+  getDuplicateRequests,
   downloadCertificate,
   verifyCertificate,
   recordPrint,
