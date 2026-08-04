@@ -25,7 +25,7 @@ const OfficerDashboard: React.FC = () => {
         
         if (appsRes.data.success && appsRes.data.data) {
           // Just take the top 5 most recent pending applications
-          setRecentApps(appsRes.data.data.slice(0, 5) as any);
+          setRecentApps(appsRes.data.data.data.slice(0, 5) as any);
         }
       } catch (error) {
         console.error('Error fetching officer dashboard data:', error);
