@@ -136,8 +136,14 @@ const getApplicationById = async (req, res, next) => {
     ) {
       return res.status(403).json({ success: false, message: 'Access denied.' });
     }
+    // If approved, also fetch the generated certificate
+    let certificate = null;
+    if (application.status === 'approved') {
+      const Certificate = require('../models/Certificate');
+      certificate = await Certificate.findOne({ applicationId: application._id });
+    }
 
-    res.status(200).json({ success: true, data: { application } });
+    res.status(200).json({ success: true, data: { application, certificate } });
   } catch (error) {
     next(error);
   }

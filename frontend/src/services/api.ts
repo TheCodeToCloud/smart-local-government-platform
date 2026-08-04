@@ -85,7 +85,7 @@ export const applicationAPI = {
     }>>('/applications', { params }),
 
   getById: (id: string) =>
-    api.get<ApiResponse<{ application: Application }>>(`/applications/${id}`),
+    api.get<ApiResponse<{ application: Application; certificate?: import('../types').Certificate }>>(`/applications/${id}`),
 
   update: (id: string, data: Partial<Application>) =>
     api.put<ApiResponse<{ application: Application }>>(`/applications/${id}`, data),
