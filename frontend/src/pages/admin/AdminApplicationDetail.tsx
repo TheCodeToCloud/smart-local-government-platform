@@ -138,7 +138,8 @@ const AdminApplicationDetail: React.FC = () => {
   }
 
   const ad = application.applicantDetails;
-  const canAct = ['pending', 'under_review'].includes(application.status);
+  const canAct = ['pending', 'under_review', 'verified'].includes(application.status);
+  const isVerified = application.status === 'verified';
   const userObj = typeof application.userId === 'object' ? application.userId as any : null;
   const reviewerObj = typeof application.reviewedBy === 'object' ? application.reviewedBy as any : null;
 
@@ -205,13 +206,27 @@ const AdminApplicationDetail: React.FC = () => {
                 >
                   Reject
                 </button>
-                <button 
-                  onClick={() => setShowApproveModal(true)} 
-                  disabled={actionLoading}
-                  className="btn-primary text-sm py-2 bg-emerald-600 hover:bg-emerald-500 shadow-emerald-500/20"
-                >
-                  Approve & Generate PDF
-                </button>
+                {isVerified ? (
+                  <button 
+                    onClick={() => setShowApproveModal(true)} 
+                    disabled={actionLoading}
+                    className="btn-primary text-sm py-2 bg-emerald-600 hover:bg-emerald-500 shadow-emerald-500/20"
+                  >
+                    Approve & Generate PDF
+                  </button>
+                ) : (
+                  <div className="group relative flex items-center">
+                    <button 
+                      disabled
+                      className="btn-primary text-sm py-2 bg-emerald-600/50 cursor-not-allowed border-transparent"
+                    >
+                      Approve & Generate PDF
+                    </button>
+                    <span className="absolute -top-8 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+                      Requires Officer Verification First
+                    </span>
+                  </div>
+                )}
               </div>
             )}
           </div>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import { officerAPI } from '../../services/api';
 import Loader from '../../components/common/Loader';
 import { useToast } from '../../components/ui/Toast';
 
@@ -15,9 +15,9 @@ const OfficerApplications: React.FC = () => {
 
   const fetchApplications = async () => {
     try {
-      const res = await axios.get('/api/officer/applications', { withCredentials: true });
+      const res = await officerAPI.getApplications();
       if (res.data.success) {
-        setApplications(res.data.data);
+        setApplications(res.data.data as any);
       }
     } catch (error) {
       showToast('Failed to load applications', 'error');
@@ -29,7 +29,7 @@ const OfficerApplications: React.FC = () => {
   const handleVerify = async (id: string) => {
     try {
       setVerifyingId(id);
-      const res = await axios.put(`/api/officer/applications/${id}/verify`, {}, { withCredentials: true });
+      const res = await officerAPI.verifyApplication(id);
       if (res.data.success) {
         showToast('Application verified and forwarded to Admin.', 'success');
         fetchApplications();
@@ -47,7 +47,7 @@ const OfficerApplications: React.FC = () => {
 
     try {
       setVerifyingId(id);
-      const res = await axios.put(`/api/officer/applications/${id}/return`, { reason }, { withCredentials: true });
+      const res = await officerAPI.returnApplication(id, reason);
       if (res.data.success) {
         showToast('Application returned for correction.', 'success');
         fetchApplications();

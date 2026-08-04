@@ -217,6 +217,10 @@ export const officerAPI = {
     api.get<ApiResponse<{ pending: number; verified: number; returned: number; }>>('/officer/stats'),
   getApplications: () =>
     api.get<ApiResponse<import('../types').Application[]> & { count: number }>('/officer/applications'),
+  verifyApplication: (id: string) =>
+    api.put<ApiResponse<any>>(`/officer/applications/${id}/verify`),
+  returnApplication: (id: string, reason: string) =>
+    api.put<ApiResponse<any>>(`/officer/applications/${id}/return`, { reason }),
 };
 
 export default api;
