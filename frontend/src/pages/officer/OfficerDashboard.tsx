@@ -25,7 +25,7 @@ const OfficerDashboard: React.FC = () => {
         
         if (appsRes.data.success && appsRes.data.data) {
           // Just take the top 5 most recent pending applications
-          setRecentApps(appsRes.data.data.data.slice(0, 5) as any);
+          setRecentApps((appsRes.data.data as Application[]).slice(0, 5));
         }
       } catch (error) {
         console.error('Error fetching officer dashboard data:', error);
@@ -54,24 +54,24 @@ const OfficerDashboard: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-200 hover:shadow-md transition-shadow relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-24 h-24 bg-amber-500/10 rounded-bl-full -z-10"></div>
+        <Link to="/officer/applications?status=pending" className="block bg-white rounded-3xl p-6 shadow-sm border border-slate-200 hover:shadow-md hover:border-amber-300 transition-all relative overflow-hidden group">
+          <div className="absolute top-0 right-0 w-24 h-24 bg-amber-500/10 rounded-bl-full -z-10 group-hover:bg-amber-500/20 transition-colors"></div>
           <p className="text-sm font-bold text-slate-500 uppercase tracking-wider mb-1">To Verify</p>
           <p className="text-4xl font-extrabold text-amber-600">{stats.pending}</p>
           <p className="text-xs text-slate-400 mt-2">Applications waiting for your review</p>
-        </div>
-        <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-200 hover:shadow-md transition-shadow relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-24 h-24 bg-emerald-500/10 rounded-bl-full -z-10"></div>
+        </Link>
+        <Link to="/officer/applications?status=verified" className="block bg-white rounded-3xl p-6 shadow-sm border border-slate-200 hover:shadow-md hover:border-emerald-300 transition-all relative overflow-hidden group">
+          <div className="absolute top-0 right-0 w-24 h-24 bg-emerald-500/10 rounded-bl-full -z-10 group-hover:bg-emerald-500/20 transition-colors"></div>
           <p className="text-sm font-bold text-slate-500 uppercase tracking-wider mb-1">Verified</p>
           <p className="text-4xl font-extrabold text-emerald-600">{stats.verified}</p>
           <p className="text-xs text-slate-400 mt-2">Applications verified by you</p>
-        </div>
-        <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-200 hover:shadow-md transition-shadow relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-24 h-24 bg-red-500/10 rounded-bl-full -z-10"></div>
+        </Link>
+        <Link to="/officer/applications?status=returned" className="block bg-white rounded-3xl p-6 shadow-sm border border-slate-200 hover:shadow-md hover:border-red-300 transition-all relative overflow-hidden group">
+          <div className="absolute top-0 right-0 w-24 h-24 bg-red-500/10 rounded-bl-full -z-10 group-hover:bg-red-500/20 transition-colors"></div>
           <p className="text-sm font-bold text-slate-500 uppercase tracking-wider mb-1">Returned</p>
           <p className="text-4xl font-extrabold text-red-500">{stats.returned}</p>
           <p className="text-xs text-slate-400 mt-2">Sent back for correction</p>
-        </div>
+        </Link>
       </div>
 
       <div className="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">

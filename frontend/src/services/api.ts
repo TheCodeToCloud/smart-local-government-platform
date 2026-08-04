@@ -216,7 +216,7 @@ export const officerAPI = {
   getStats: () =>
     api.get<ApiResponse<{ pending: number; verified: number; returned: number; }>>('/officer/stats'),
   getApplications: () =>
-    api.get<ApiResponse<{ count: number; data: import('../types').Application[] }>>('/officer/applications'),
+    api.get<ApiResponse<import('../types').Application[]> & { count: number }>('/officer/applications'),
 };
 
 export default api;
