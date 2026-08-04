@@ -45,14 +45,18 @@ exports.verifyApplication = async (req, res, next) => {
     await application.save();
 
     // Notify user
-    const notification = await Notification.create({
-      userId: application.userId,
-      title: 'Application Verified',
-      message: `Your application (${application.applicationNumber}) documents have been verified and forwarded for final approval.`,
-      type: 'status_update',
-      link: `/applications/${application._id}`,
-    });
-    emitNotification(application.userId.toString(), notification);
+    try {
+      const notification = await Notification.create({
+        userId: application.userId,
+        title: 'Application Verified',
+        message: `Your application (${application.applicationNumber}) documents have been verified and forwarded for final approval.`,
+        type: 'status_update',
+        link: `/applications/${application._id}`,
+      });
+      emitNotification(application.userId.toString(), notification);
+    } catch (notifErr) {
+      console.warn('Failed to create notification:', notifErr.message);
+    }
 
     res.status(200).json({
       success: true,
@@ -86,14 +90,18 @@ exports.returnApplicationForCorrection = async (req, res, next) => {
     await application.save();
 
     // Notify user
-    const notification = await Notification.create({
-      userId: application.userId,
-      title: 'Action Required on Application',
-      message: `Your application (${application.applicationNumber}) requires correction. Reason: ${reason}`,
-      type: 'action_required',
-      link: `/applications/${application._id}`,
-    });
-    emitNotification(application.userId.toString(), notification);
+    try {
+      const notification = await Notification.create({
+        userId: application.userId,
+        title: 'Action Required on Application',
+        message: `Your application (${application.applicationNumber}) requires correction. Reason: ${reason}`,
+        type: 'action_required',
+        link: `/applications/${application._id}`,
+      });
+      emitNotification(application.userId.toString(), notification);
+    } catch (notifErr) {
+      console.warn('Failed to create notification:', notifErr.message);
+    }
 
     res.status(200).json({
       success: true,
