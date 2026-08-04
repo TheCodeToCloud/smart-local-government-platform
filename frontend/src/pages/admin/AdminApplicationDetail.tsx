@@ -4,6 +4,7 @@ import { adminAPI, applicationAPI } from '../../services/api';
 import type { Application } from '../../types';
 import StatusBadge from '../../components/common/StatusBadge';
 import Loader from '../../components/common/Loader';
+import BirthCertificatePrinter from '../../components/certificates/BirthCertificatePrinter';
 import { AxiosError } from 'axios';
 
 const AdminApplicationDetail: React.FC = () => {
@@ -23,6 +24,7 @@ const AdminApplicationDetail: React.FC = () => {
   // Modals state
   const [showRejectModal, setShowRejectModal] = useState(false);
   const [showApproveModal, setShowApproveModal] = useState(false);
+  const [showPrinter, setShowPrinter] = useState(false);
 
   // Document verification state (SMART FEATURE)
   const [docStatuses, setDocStatuses] = useState<Record<string, 'verified' | 'unverified'>>({});
@@ -123,6 +125,10 @@ const AdminApplicationDetail: React.FC = () => {
 
   const handleViewPdf = async () => {
     if (!certificate?._id) return;
+    if (certificate.certificateType === 'birth') {
+      setShowPrinter(true);
+      return;
+    }
     try {
       showMsg('success', 'Loading PDF...');
       const { certificateAPI } = await import('../../services/api');
@@ -610,6 +616,13 @@ const AdminApplicationDetail: React.FC = () => {
             </div>
           </div>
         </div>
+      )}
+
+      {showPrinter && certificate && (
+        <BirthCertificatePrinter 
+          cert={certificate} 
+          onClose={() => setShowPrinter(false)} 
+        />
       )}
 
     </div>
