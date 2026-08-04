@@ -40,6 +40,7 @@ import ManageUsers from './pages/admin/ManageUsers';
 // ── Protected Officer Pages ───────────────────────────────────────────────────
 import OfficerDashboard from './pages/officer/OfficerDashboard';
 import OfficerApplications from './pages/officer/OfficerApplications';
+import OfficerApplicationDetail from './pages/officer/OfficerApplicationDetail';
 
 function App() {
   return (
@@ -80,6 +81,7 @@ function App() {
                 <Route element={<OfficerRoute />}>
                   <Route path="/officer"                      element={<OfficerDashboard />} />
                   <Route path="/officer/applications"         element={<OfficerApplications />} />
+                  <Route path="/officer/applications/:id"     element={<OfficerApplicationDetail />} />
                   <Route path="/officer/profile"              element={<Profile />} />
                 </Route>
 

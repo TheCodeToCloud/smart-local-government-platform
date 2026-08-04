@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { officerAPI } from '../../services/api';
 import Loader from '../../components/common/Loader';
 import { useToast } from '../../components/ui/Toast';
@@ -95,7 +96,13 @@ const OfficerApplications: React.FC = () => {
                         {app.status.replace('_', ' ')}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-right space-x-2">
+                    <td className="px-6 py-4 text-right space-x-2 flex justify-end items-center">
+                      <Link
+                        to={`/officer/applications/${app._id}`}
+                        className="btn-outline border-slate-200 hover:border-slate-300 text-slate-700 py-1.5 px-3 rounded-lg text-xs transition-colors"
+                      >
+                        View
+                      </Link>
                       <button
                         onClick={() => handleVerify(app._id)}
                         disabled={verifyingId === app._id}
