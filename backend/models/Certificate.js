@@ -60,6 +60,20 @@ const certificateSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    duplicateRequestStatus: {
+      type: String,
+      enum: ['none', 'pending', 'approved', 'rejected'],
+      default: 'none',
+    },
+    duplicateRequestReason: {
+      type: String,
+      trim: true,
+      default: null,
+    },
+    duplicateRequestDate: {
+      type: Date,
+      default: null,
+    },
   },
   {
     timestamps: true,

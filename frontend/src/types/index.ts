@@ -115,6 +115,9 @@ export interface Certificate {
   revokedAt?: string;
   revokedReason?: string;
   downloadCount: number;
+  duplicateRequestStatus: 'none' | 'pending' | 'approved' | 'rejected';
+  duplicateRequestReason?: string;
+  duplicateRequestDate?: string;
   createdAt: string;
 }
 

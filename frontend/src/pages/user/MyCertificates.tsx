@@ -51,9 +51,10 @@ interface CertCardProps {
   cert: Certificate;
   onQR: (certNumber: string) => void;
   onPrintPreview: (cert: Certificate) => void;
+  onRequestDuplicate: (cert: Certificate) => void;
 }
 
-const CertCard: React.FC<CertCardProps> = ({ cert, onQR, onPrintPreview }) => {
+const CertCard: React.FC<CertCardProps> = ({ cert, onQR, onPrintPreview, onRequestDuplicate }) => {
   const ct = CERTIFICATE_TYPES.find((c) => c.id === cert.certificateType);
   const isExpired = new Date() > new Date(cert.expiryDate);
   const status = !cert.isValid ? 'revoked' : isExpired ? 'expired' : 'valid';
@@ -142,13 +143,29 @@ const CertCard: React.FC<CertCardProps> = ({ cert, onQR, onPrintPreview }) => {
       )}
       {/* Actions */}
       <div className="flex gap-2">
-        <button
-          onClick={handleDownload}
-          disabled={status !== 'valid' || isDownloading}
-          className={`flex-1 btn-secondary text-xs py-2.5 text-center ${(status !== 'valid' || isDownloading) ? 'opacity-40 cursor-not-allowed' : ''}`}
-        >
-          {isDownloading ? 'Downloading...' : cert.certificateType === 'birth' ? '🖨️ Print / PDF' : '⬇️ Download PDF'}
-        </button>
+        {cert.downloadCount > 0 && cert.duplicateRequestStatus !== 'approved' ? (
+          cert.duplicateRequestStatus === 'pending' ? (
+            <button disabled className="flex-1 btn-outline border-amber-200 text-amber-600 text-xs py-2.5 opacity-70 cursor-not-allowed">
+              ⏳ Request Pending
+            </button>
+          ) : (
+            <button
+              onClick={() => onRequestDuplicate(cert)}
+              disabled={status !== 'valid'}
+              className={`flex-1 btn-secondary text-xs py-2.5 text-center bg-blue-50 text-blue-700 hover:bg-blue-100 border-transparent ${status !== 'valid' ? 'opacity-40 cursor-not-allowed' : ''}`}
+            >
+              📝 Request Duplicate
+            </button>
+          )
+        ) : (
+          <button
+            onClick={handleDownload}
+            disabled={status !== 'valid' || isDownloading}
+            className={`flex-1 btn-secondary text-xs py-2.5 text-center ${(status !== 'valid' || isDownloading) ? 'opacity-40 cursor-not-allowed' : ''}`}
+          >
+            {isDownloading ? 'Downloading...' : cert.certificateType === 'birth' ? (cert.downloadCount > 0 ? '🖨️ Print Copy' : '🖨️ Print Original') : '⬇️ Download PDF'}
+          </button>
+        )}
         <button
           onClick={() => onQR(cert.certificateNumber)}
           className="btn-ghost text-xs py-2.5 px-3"
@@ -168,6 +185,9 @@ const MyCertificates: React.FC = () => {
   const [fetchError, setFetchError] = useState<string | null>(null);
   const [qrCert, setQrCert] = useState<string | null>(null);
   const [printCert, setPrintCert] = useState<Certificate | null>(null);
+  const [duplicateRequestCert, setDuplicateRequestCert] = useState<Certificate | null>(null);
+  const [duplicateReason, setDuplicateReason] = useState('');
+  const [isSubmittingDuplicate, setIsSubmittingDuplicate] = useState(false);
   const [filter, setFilter] = useState<'all' | 'valid' | 'expired'>('all');
 
   useEffect(() => {
@@ -183,7 +203,32 @@ const MyCertificates: React.FC = () => {
       }
     };
     fetch();
-  }, []);
+  }, [printCert]);
+
+  const handleDuplicateSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!duplicateRequestCert || !duplicateReason.trim()) return;
+    
+    try {
+      setIsSubmittingDuplicate(true);
+      await certificateAPI.requestDuplicate(duplicateRequestCert._id, duplicateReason);
+      
+      // Update local state
+      setCertificates(prev => prev.map(c => 
+        c._id === duplicateRequestCert._id 
+          ? { ...c, duplicateRequestStatus: 'pending', duplicateRequestReason: duplicateReason } 
+          : c
+      ));
+      
+      setDuplicateRequestCert(null);
+      setDuplicateReason('');
+    } catch (error) {
+      console.error('Failed to submit duplicate request', error);
+      alert('Failed to submit request. Please try again.');
+    } finally {
+      setIsSubmittingDuplicate(false);
+    }
+  };
 
   const filteredCerts = certificates.filter((cert) => {
     const isExpired = new Date() > new Date(cert.expiryDate);
@@ -198,6 +243,29 @@ const MyCertificates: React.FC = () => {
       
       {printCert && printCert.certificateType === 'birth' && (
         <BirthCertificatePrinter cert={printCert} onClose={() => setPrintCert(null)} />
+      )}
+      
+      {duplicateRequestCert && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <form onSubmit={handleDuplicateSubmit} className="bg-white p-8 max-w-sm w-full rounded-3xl shadow-xl">
+            <h3 className="text-xl font-bold text-slate-800 mb-4">Request Duplicate</h3>
+            <p className="text-slate-500 text-sm mb-4">Please provide a reason for your duplicate request.</p>
+            <textarea
+              required
+              value={duplicateReason}
+              onChange={(e) => setDuplicateReason(e.target.value)}
+              className="w-full p-3 border border-slate-200 rounded-xl mb-6 text-sm"
+              placeholder="Reason for request..."
+              rows={3}
+            />
+            <div className="flex gap-3">
+              <button type="button" onClick={() => setDuplicateRequestCert(null)} className="flex-1 btn-ghost text-sm py-2.5">Cancel</button>
+              <button type="submit" disabled={isSubmittingDuplicate} className="flex-1 btn-primary text-sm py-2.5">
+                {isSubmittingDuplicate ? 'Submitting...' : 'Submit Request'}
+              </button>
+            </div>
+          </form>
+        </div>
       )}
 
       <div className="max-w-5xl mx-auto">
@@ -276,7 +344,13 @@ const MyCertificates: React.FC = () => {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {filteredCerts.map((cert) => (
-              <CertCard key={cert._id} cert={cert} onQR={setQrCert} onPrintPreview={setPrintCert} />
+              <CertCard 
+                key={cert._id} 
+                cert={cert} 
+                onQR={setQrCert} 
+                onPrintPreview={setPrintCert} 
+                onRequestDuplicate={setDuplicateRequestCert}
+              />
             ))}
           </div>
         )}

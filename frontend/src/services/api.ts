@@ -191,6 +191,15 @@ export const certificateAPI = {
 
   recordPrint: (id: string) =>
     api.post<ApiResponse>(`/certificates/${id}/record-print`),
+
+  requestDuplicate: (id: string, reason: string) =>
+    api.post<ApiResponse>(`/certificates/${id}/request-duplicate`, { reason }),
+
+  approveDuplicate: (id: string) =>
+    api.put<ApiResponse>(`/certificates/${id}/approve-duplicate`),
+
+  rejectDuplicate: (id: string) =>
+    api.put<ApiResponse>(`/certificates/${id}/reject-duplicate`),
 };
 
 // ─── Notification API ─────────────────────────────────────────────────────────

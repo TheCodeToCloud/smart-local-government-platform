@@ -126,13 +126,91 @@ const recordPrint = async (req, res, next) => {
       return res.status(403).json({ success: false, message: 'Access denied.' });
     }
 
+    // Official Government rule: Cannot print duplicate without an approved request
+    if (certificate.downloadCount > 0 && certificate.duplicateRequestStatus !== 'approved') {
+      return res.status(400).json({ 
+        success: false, 
+        message: 'प्रतिलिपि निकाल्नको लागि निवेदन स्वीकृत भएको हुनुपर्छ। (Duplicate request must be approved to print again)' 
+      });
+    }
+
     certificate.downloadCount = (certificate.downloadCount || 0) + 1;
+    
+    // If it was an approved duplicate, reset the status so they have to request again next time
+    if (certificate.duplicateRequestStatus === 'approved') {
+      certificate.duplicateRequestStatus = 'none';
+      certificate.duplicateRequestReason = null;
+      certificate.duplicateRequestDate = null;
+    }
+
     await certificate.save();
 
     res.status(200).json({ 
       success: true, 
-      data: { downloadCount: certificate.downloadCount }
+      data: { downloadCount: certificate.downloadCount, duplicateRequestStatus: certificate.duplicateRequestStatus }
     });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// ─── 5. POST /api/certificates/:id/request-duplicate ──────────────────────────
+const requestDuplicate = async (req, res, next) => {
+  try {
+    const { reason } = req.body;
+    if (!reason) {
+      return res.status(400).json({ success: false, message: 'Reason is required' });
+    }
+
+    const certificate = await Certificate.findById(req.params.id);
+    if (!certificate) return res.status(404).json({ success: false, message: 'Not found' });
+    
+    if (certificate.userId.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ success: false, message: 'Access denied.' });
+    }
+
+    certificate.duplicateRequestStatus = 'pending';
+    certificate.duplicateRequestReason = reason;
+    certificate.duplicateRequestDate = new Date();
+    await certificate.save();
+
+    res.status(200).json({ success: true, message: 'Duplicate request submitted', data: certificate });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// ─── 6. PUT /api/certificates/:id/approve-duplicate ───────────────────────────
+const approveDuplicate = async (req, res, next) => {
+  try {
+    if (!['admin', 'officer'].includes(req.user.role)) {
+      return res.status(403).json({ success: false, message: 'Access denied.' });
+    }
+    const certificate = await Certificate.findById(req.params.id);
+    if (!certificate) return res.status(404).json({ success: false, message: 'Not found' });
+
+    certificate.duplicateRequestStatus = 'approved';
+    await certificate.save();
+
+    res.status(200).json({ success: true, message: 'Duplicate request approved', data: certificate });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// ─── 7. PUT /api/certificates/:id/reject-duplicate ────────────────────────────
+const rejectDuplicate = async (req, res, next) => {
+  try {
+    if (!['admin', 'officer'].includes(req.user.role)) {
+      return res.status(403).json({ success: false, message: 'Access denied.' });
+    }
+    const certificate = await Certificate.findById(req.params.id);
+    if (!certificate) return res.status(404).json({ success: false, message: 'Not found' });
+
+    certificate.duplicateRequestStatus = 'rejected';
+    await certificate.save();
+
+    res.status(200).json({ success: true, message: 'Duplicate request rejected', data: certificate });
   } catch (error) {
     next(error);
   }
@@ -143,4 +221,7 @@ module.exports = {
   downloadCertificate,
   verifyCertificate,
   recordPrint,
+  requestDuplicate,
+  approveDuplicate,
+  rejectDuplicate,
 };

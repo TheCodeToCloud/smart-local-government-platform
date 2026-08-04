@@ -236,6 +236,57 @@ const OfficerApplicationDetail: React.FC = () => {
           </div>
         </div>
 
+        {/* Duplicate Request Action Banner */}
+        {certificate && certificate.duplicateRequestStatus === 'pending' && (
+          <div className="bg-amber-50 border border-amber-200 rounded-3xl p-6 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6 animate-pulse-soft">
+            <div>
+              <h2 className="text-lg font-bold text-amber-800 flex items-center gap-2 mb-2">
+                <span>⚠️</span> Duplicate Certificate Requested
+              </h2>
+              <p className="text-amber-700 text-sm mb-2">
+                The citizen has requested a duplicate copy (प्रतिलिपि) of this certificate.
+              </p>
+              <div className="bg-white/60 p-3 rounded-xl border border-amber-100 text-sm italic text-slate-700">
+                "{certificate.duplicateRequestReason}"
+              </div>
+            </div>
+            <div className="flex items-center gap-3 shrink-0">
+              <button 
+                onClick={async () => {
+                  try {
+                    const { certificateAPI } = await import('../../services/api');
+                    await certificateAPI.rejectDuplicate(certificate._id);
+                    setCertificate({ ...certificate, duplicateRequestStatus: 'rejected' });
+                    showMsg('success', 'Duplicate request rejected');
+                  } catch (e) {
+                    showMsg('error', 'Failed to reject request');
+                  }
+                }}
+                disabled={actionLoading}
+                className="btn-danger bg-red-100 text-red-600 hover:bg-red-200 border-transparent text-sm py-2"
+              >
+                Reject
+              </button>
+              <button 
+                onClick={async () => {
+                  try {
+                    const { certificateAPI } = await import('../../services/api');
+                    await certificateAPI.approveDuplicate(certificate._id);
+                    setCertificate({ ...certificate, duplicateRequestStatus: 'approved' });
+                    showMsg('success', 'Duplicate request approved');
+                  } catch (e) {
+                    showMsg('error', 'Failed to approve request');
+                  }
+                }}
+                disabled={actionLoading}
+                className="btn-primary bg-amber-600 hover:bg-amber-700 border-transparent text-sm py-2 shadow-amber-600/20"
+              >
+                Approve Request
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* 6. Application Timeline */}
         <div className="bg-white p-6 rounded-3xl shadow-sm border border-slate-200">
           <h2 className="text-sm font-bold text-slate-500 uppercase tracking-wider mb-6">Processing Timeline</h2>
