@@ -25,7 +25,7 @@ app.use(helmet({
       scriptSrc: ["'self'"],
       styleSrc: ["'self'", "'unsafe-inline'"],
       imgSrc: ["'self'", "data:", "https://res.cloudinary.com"],
-      connectSrc: ["'self'", "http://localhost:5173", process.env.FRONTEND_URL].filter(Boolean),
+      connectSrc: ["'self'", "http://localhost:*", "http://127.0.0.1:*", process.env.FRONTEND_URL].filter(Boolean),
       fontSrc: ["'self'", "https:", "data:"],
       objectSrc: ["'none'"],
       mediaSrc: ["'self'"],
@@ -43,7 +43,8 @@ const allowedOrigins = [
 
 app.use(cors({
   origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin)) {
+    // Allow any localhost/127.0.0.1 port for development, plus allowedOrigins
+    if (!origin || /localhost/.test(origin) || /127\.0\.0\.1/.test(origin) || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
       callback(new Error(`CORS policy: origin ${origin} not allowed`));
